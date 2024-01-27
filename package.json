@@ -1,0 +1,27 @@
+{
+    "scripts": {
+        "build": "node build.mjs"
+    },
+    "dependencies": {
+        "@pixi/picture": "3.0.6",
+        "@pixi/tilemap": "3.2.2",
+        "assert": "^2.1.0",
+        "browserify-zlib": "^0.2.0",
+        "buffer": "^6.0.3",
+        "crypto-browserify": "^3.12.0",
+        "events": "^3.3.0",
+        "js-yaml": "4.1.0",
+        "pixi-filters": "4.2.0",
+        "pixi.js": "^6.5.10",
+        "stream-browserify": "^3.0.0",
+        "util": "^0.12.5"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.23.7",
+        "@babel/preset-env": "^7.23.8",
+        "esbuild": "^0.19.5"
+    },
+    "browser": {
+        "stream": "stream-browserify"
+    }
+}
