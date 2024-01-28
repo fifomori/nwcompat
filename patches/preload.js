@@ -41,8 +41,5 @@ nwcompat.patches.push({
         navigator.getGamepads = () => {
             return [nwcompat.gamepad];
         };
-
-        // AudioStreaming.js
-        window.fetch = () => new Promise((resolve, reject) => resolve());
     },
 });

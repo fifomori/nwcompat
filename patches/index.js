@@ -1,4 +1,5 @@
 require("./misc");
+require("./oneloader");
 require("./performance");
 require("./pixi");
 require("./plugins_undo");

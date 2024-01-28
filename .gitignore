@@ -1,5 +1,2 @@
-.vscode/sftp.json
-.sftpignore
-
 node_modules
 dist
