@@ -11,7 +11,8 @@ Based on [chromori](https://github.com/fifomori/chromori)
 # Building
 
 1. `pnpm i`
-1. `pnpm run build`
+1. `set NWCOMPAT_DST=path\to\fifomori\android&& build`
+   Note: no spaces before `&&` because windows cmd is shit
 
 # Credits
 
