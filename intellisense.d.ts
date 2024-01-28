@@ -9,15 +9,14 @@ interface NWCompat {
     getGameDirectory: () => string;
     getKey: () => string;
 
-    fsStat: (path: string) => number;
+    fsReadFile: (path: string) => string | undefined;
+    fsWriteFile: (path: string, data: unknown[]) => void;
 
     fsReadDir: (path: string) => string[];
     fsMkDir: (path: string) => void;
 
-    fsReadFile: (path: string) => string | undefined;
-    fsWriteFile: (path: string, data: unknown[]) => void;
-
     fsUnlink: (path: string) => void;
+    fsStat: (path: string) => number;
     fsRename: (path: string, newPath: string) => void;
 
     // Web
