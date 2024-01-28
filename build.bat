@@ -4,7 +4,7 @@
 @REM NWCOMPAT_DST: Android app source path (example: D:\Development\Java\OMORI)
 @REM NWCOMPAT_DST_ADB: OMORI path on your phone (debug apk, example: /sdcard)
 
-@REM call pnpm run build
+call pnpm run build
 
 if defined NWCOMPAT_DST (
     xcopy /y "nwcompat.js" "%NWCOMPAT_DST%\app\src\main\assets\"
