@@ -3,8 +3,6 @@ nwcompat.patches.push({
     patch: () => {
         if (typeof $modLoader === "undefined") return;
 
-        window._logLine = console.warn;
-
         // Copied from OneLoader
         function _vfs_resolve_file_path(relativePath) {
             relativePath = relativePath.toLowerCase();
