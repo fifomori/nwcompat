@@ -4,17 +4,13 @@ const fs = {
     readFile(path, callback) {
         if (!callback) return;
 
-        let data;
         try {
-            data = __requireCache["fs"].readFileSync(path);
+            callback(null, __requireCache["fs"].readFileSync(path, "async"));
         } catch (err) {
             // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another thread
             if (path.includes("CUTSCENE.json")) callback();
             else callback(err);
-            return;
         }
-
-        callback(null, data);
     },
 
     readFileSync(path, options = "ascii") {
@@ -23,14 +19,16 @@ const fs = {
             path = path.replace("/OMORI", "");
         }
 
-        let logStr = `readFileSync('${path}'): `;
+        let logStr = options == "async" ? "readFile" : "readFileSync";
+
+        logStr += `('${path}'): `;
 
         const rs = performance.now();
         const data = nwcompat.fsReadFile(path);
         const re = performance.now();
         logStr += `read: ${re - rs}ms`;
 
-        if (!data) {
+        if (data == null) {
             logStr += ` ENOENT`;
             console.debug(logStr);
             throw "ENOENT";
@@ -55,12 +53,20 @@ const fs = {
     },
 
     writeFileSync(path, data) {
-        console.log(`writeFileSync('${path}'): typeof data: ${typeof data}`);
+        let logStr = `writeFileSync('${path}'): typeof data: ${typeof data}`;
 
+        const es = performance.now();
         if (typeof data === "number") data = String(data);
         if (typeof data === "string") data = nwcompat.encoder.encode(data);
+        const ee = performance.now();
 
+        const ws = performance.now();
         nwcompat.fsWriteFile(path, data);
+        const we = performance.now();
+
+        logStr += `, encode: ${ee - es}ms, write: ${we - ws}ms`;
+
+        console.debug(logStr);
     },
 
     readdir(path, callback) {
