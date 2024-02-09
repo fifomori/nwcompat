@@ -35,6 +35,9 @@ dependencies:
   pixi.js:
     specifier: ^6.5.10
     version: 6.5.10
+  stats-js:
+    specifier: ^1.0.1
+    version: 1.0.1
   stream-browserify:
     specifier: ^3.0.0
     version: 3.0.0
@@ -3224,6 +3227,10 @@ packages:
       call-bind: 1.0.5
       get-intrinsic: 1.2.2
       object-inspect: 1.13.1
+    dev: false
+
+  /stats-js@1.0.1:
+    resolution: {integrity: sha512-EAwEFghGNv8mlYC4CZzI5kWghsnP8uBKXw6VLRHtXkOk5xySfUKLTqTkjgJFfDluIkf/O7eZwi5MXP50VeTbUg==}
     dev: false
 
   /stream-browserify@3.0.0:

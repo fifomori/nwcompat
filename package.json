@@ -13,6 +13,7 @@
         "js-yaml": "4.1.0",
         "pixi-filters": "4.2.0",
         "pixi.js": "^6.5.10",
+        "stats-js": "^1.0.1",
         "stream-browserify": "^3.0.0",
         "util": "^0.12.5"
     },

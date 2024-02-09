@@ -1,6 +1,31 @@
 nwcompat.patches.push({
     preload: false,
     patch: () => {
+        const Stats = require("stats-js");
+
+        // stats.js fps counter
+        Omori_FPSCounter.prototype.initialize = function () {
+            this._stats = new Stats();
+            this._stats.dom.style.top = "16px";
+            this._stats.dom.style.left = "16px";
+            document.body.appendChild(this._stats.dom);
+        };
+
+        Omori_FPSCounter.prototype.startTick = function () {
+            this._stats.begin();
+        };
+
+        Omori_FPSCounter.prototype.endTick = function () {
+            this._stats.end();
+        };
+
+        Omori_FPSCounter.prototype.hide = function () {};
+        Omori_FPSCounter.prototype.show = function () {};
+
+        Omori_FPSCounter.prototype.switchMode = function () {
+            this._stats.dom.dispatchEvent(new Event("click"));
+        };
+
         const oWindow_OmoMenuOptionsGeneral = {
             makeOptionsList: Window_OmoMenuOptionsGeneral.prototype.makeOptionsList,
             processOptionCommand: Window_OmoMenuOptionsGeneral.prototype.processOptionCommand,
