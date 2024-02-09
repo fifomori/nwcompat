@@ -4,13 +4,33 @@ const fs = {
     readFile(path, callback) {
         if (!callback) return;
 
-        try {
-            callback(null, __requireCache["fs"].readFileSync(path, "async"));
-        } catch (err) {
-            // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another thread
-            if (path.includes("CUTSCENE.json")) callback();
-            else callback(err);
+        // redirect to /data/user/0/com.cafeed28.omori/files/
+        if (path.startsWith(nwcompat.dataDirectory)) {
+            path = path.replace("/OMORI", "");
         }
+
+        nwcompat.async.call("fsReadFileAsync", { path }).then((data) => {
+            let logStr = `readFile('${path}'): `;
+
+            if (data == null) {
+                logStr += `ENOENT`;
+                console.debug(logStr);
+                // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another thread
+                if (path.includes("CUTSCENE.json")) callback();
+                else callback("ENOENT");
+                return;
+            }
+
+            const ds = performance.now();
+            const buffer = Buffer.from(data, "base64");
+            const de = performance.now();
+
+            logStr += `decode: ${de - ds}ms`;
+
+            console.debug(logStr);
+
+            callback(null, buffer);
+        });
     },
 
     readFileSync(path, options = "ascii") {

@@ -21,6 +21,44 @@ nwcompat.runPatches = (preload) => {
     });
 };
 
+nwcompat.async = {};
+nwcompat.async.awaiters = new Map();
+
+nwcompat.async.call = async (methodName, args) => {
+    const s = performance.now();
+    const id = Math.floor(Math.random() * 1000000);
+    if (nwcompat.async.awaiters.has(id)) {
+        throw "Kafif!!!! while !has: id = gen()";
+    }
+
+    /**
+     * @type {Awaiter}
+     */
+    const awaiter = {};
+
+    const promise = new Promise((resolve, reject) => {
+        awaiter.resolve = (r) => resolve(r);
+        awaiter.reject = (r) => reject(r);
+    });
+
+    nwcompat.async.awaiters.set(id, awaiter);
+    const e = performance.now();
+    // console.log(`async.call: prepared in ${e - s}ms`);
+
+    const ss = performance.now();
+    nwcompat.asyncCall(id, methodName, JSON.stringify(args));
+    const ee = performance.now();
+    // console.log(`async.call: called in ${ee - ss}ms`);
+
+    return promise;
+};
+
+nwcompat.async.callback = (id, success, result) => {
+    const awaiter = nwcompat.async.awaiters.get(id);
+    success ? awaiter.resolve(result) : awaiter.reject(result);
+    nwcompat.async.awaiters.delete(id);
+};
+
 globalThis.require = (id) => {
     let module = __requireCache[id];
 
