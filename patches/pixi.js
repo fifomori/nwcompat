@@ -68,15 +68,18 @@ nwcompat.patches.push({
         };
 
         Graphics._createRenderer = function () {
-            var options = {
-                view: this._canvas,
-                width: this._width,
-                height: this._height,
-                resolution: 1,
-                useContextAlpha: false,
-            };
             try {
-                this._renderer = new PIXI.Renderer(options);
+                this._renderer = new PIXI.Renderer({
+                    view: this._canvas,
+                    width: this._width,
+                    height: this._height,
+                    resolution: 1,
+                    useContextAlpha: false,
+                });
+
+                // https://github.com/bfanger/pixi-inspector
+                globalThis.__PIXI_STAGE__ = SceneManager._scene;
+                globalThis.__PIXI_RENDERER__ = this._renderer;
             } catch (e) {
                 this._renderer = null;
             }
