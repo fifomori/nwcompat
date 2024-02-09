@@ -1,6 +1,50 @@
 nwcompat.patches.push({
     preload: false,
     patch: () => {
+        const path = __requireCache["path"];
+        const fs = __requireCache["fs"];
+
+        const oSceneManager = { initGraphics: SceneManager.initGraphics };
+        SceneManager.initGraphics = function () {
+            oSceneManager.initGraphics.call(this, ...arguments);
+            this._renderTexture = PIXI.RenderTexture.create(Graphics.width, Graphics.height);
+            this._backgroundSprite = new PIXI.Sprite(this._renderTexture);
+        };
+
+        SceneManager.snapForBackground = function () {
+            Graphics._renderer.render(this._scene, this._renderTexture);
+        };
+
+        const common_createBackgroundBlurred = function () {
+            console.debug("common_createBackgroundBlurred", this);
+
+            const blur = new PIXI.filters.BlurFilter();
+            blur.blur = 1;
+            blur.padding = 0;
+
+            this._backgroundSprite = SceneManager._backgroundSprite;
+            this._backgroundSprite.filters = [blur];
+        };
+
+        Scene_Menu.prototype.createBackground =
+            Scene_OmoMenuBase.prototype.createBackground =
+            Sprite_MapCharacterTag.prototype.createBackground =
+                function () {
+                    common_createBackgroundBlurred.call(this);
+                    this.addChild(this._backgroundSprite);
+                };
+
+        Sprite_MapCharacterTag.prototype.show = function () {
+            this._index = 0;
+            this.refreshPartySprites();
+            this.resetPartySprites();
+            SceneManager.snapForBackground();
+            this._partySpritesContainer.opacity = 0;
+            this.startStartupAnim();
+            this._released = false;
+            this._finished = false;
+        };
+
         // dirty
         const oHTMLCanvasElement = { getContext: HTMLCanvasElement.prototype.getContext };
         HTMLCanvasElement.prototype.getContext = function () {
@@ -11,35 +55,179 @@ nwcompat.patches.push({
             }
         };
 
-        // TODO: fuck classes
-        DataManager = class extends DataManager {
-            static loadGlobalInfo() {
-                if (!this._globalInfo) {
-                    this._globalInfo = super.loadGlobalInfo();
-                }
-                return this._globalInfo;
+        DataManager._cacheMap = Yanfly.PreloadedMaps;
+        DataManager._cacheTiledMap = [];
+        DataManager._cacheTileset = [];
+
+        const oDataManager = {
+            loadGlobalInfo: DataManager.loadGlobalInfo,
+            saveGlobalInfo: DataManager.saveGlobalInfo,
+            loadMapData: DataManager.loadMapData,
+            loadTiledMapData: DataManager.loadTiledMapData,
+            loadTilesetData: DataManager.loadTilesetData,
+        };
+
+        DataManager.loadGlobalInfo = function () {
+            if (!this._globalInfo) {
+                this._globalInfo = oDataManager.loadGlobalInfo.call(this, ...arguments);
+            }
+            return this._globalInfo;
+        };
+
+        DataManager.saveGlobalInfo = function () {
+            this._globalInfo = null;
+            oDataManager.saveGlobalInfo.call(this, ...arguments);
+        };
+
+        // GTP_OmoriFixes
+        DataManager.loadMapData = function (mapId) {
+            if (!!Utils.isOptionValid("test")) {
+                return oDataManager.loadMapData.call(this, ...arguments);
             }
 
-            static saveGlobalInfo(info) {
-                this._globalInfo = null;
-                super.saveGlobalInfo(info);
+            if (mapId > 0) {
+                if (this._cacheMap[mapId]) {
+                    $dataMap = this._cacheMap[mapId];
+
+                    DataManager.onLoad($dataMap);
+                    Graphics.endLoading();
+                    this._mapLoader = true;
+                } else {
+                    this._mapLoader = false;
+                    $dataMap = null;
+                    Graphics.startLoading();
+
+                    const base = path.dirname(process.mainModule.filename);
+                    const filename = `${base}/data/Map${mapId.padZero(3)}.KEL`;
+                    try {
+                        const buffer = fs.readFileSync(filename);
+                        const data = Encryption.decrypt(buffer).toString();
+                        $dataMap = this._cacheMap[mapId] = JSON.parse(data);
+
+                        DataManager.onLoad($dataMap);
+                        Graphics.endLoading();
+                        this._mapLoader = true;
+                    } catch (e) {
+                        Graphics.printLoadingError(filename);
+                        SceneManager.stop();
+                    }
+                }
+
+                this.loadTiledMapData(mapId);
+            } else {
+                this.makeEmptyMap();
+                this.unloadTiledMapData();
+            }
+        };
+
+        // YED_Tiled
+        DataManager.loadTiledMapData = function (mapId) {
+            if (!!Utils.isOptionValid("test")) {
+                return oDataManager.loadTiledMapData.call(this, ...arguments);
+            }
+
+            if (this._cacheTiledMap[mapId]) {
+                DataManager._tempTiledData = this._cacheTiledMap[mapId];
+                DataManager.loadTilesetData();
+                DataManager._tiledLoaded = true;
+            } else {
+                const base = path.dirname(process.mainModule.filename);
+                const filename = `${base}/maps/map${mapId}.AUBREY`;
+                this.unloadTiledMapData();
+                try {
+                    const buffer = fs.readFileSync(filename);
+                    const decrypt = Encryption.decrypt(buffer);
+                    DataManager._tempTiledData = this._cacheTiledMap[mapId] = JSON.parse(decrypt.toString());
+                    DataManager.loadTilesetData();
+                    DataManager._tiledLoaded = true;
+                } catch (e) {
+                    console.error(e);
+                    Graphics.printLoadingError(filename);
+                    SceneManager.stop();
+                }
+            }
+        };
+
+        // YED_Tiled
+        DataManager.loadTilesetData = function () {
+            for (const tileset of DataManager._tempTiledData.tilesets) {
+                if (!tileset.source) continue;
+
+                const filename = tileset.source.replace(/^.*[\\\/]/, "");
+
+                if (this._cacheTileset[filename]) {
+                    Object.assign(tileset, this._cacheTileset[filename]);
+                } else {
+                    DataManager._tilesetToLoad++;
+                    if (Utils.isOptionValid("test")) {
+                        const xhr = new XMLHttpRequest();
+
+                        xhr.open("GET", "./maps/" + filename);
+                        xhr.overrideMimeType("application/json");
+
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200 || xhr.responseText !== "") {
+                                    const data = JSON.parse(xhr.responseText);
+                                    this._cacheTileset[filename] = data;
+                                    Object.assign(tileset, data);
+                                }
+                                DataManager._tilesetToLoad--;
+                            }
+                        };
+
+                        xhr.send();
+                    } else {
+                        var base = path.dirname(process.mainModule.filename);
+                        try {
+                            const buffer = fs.readFileSync(base + "/maps/" + filename.replace(".json", ".AUBREY"));
+                            const data = JSON.parse(Encryption.decrypt(buffer).toString());
+                            this._cacheTileset[filename] = data;
+                            Object.assign(tileset, data);
+                            DataManager._tilesetToLoad--;
+                        } catch (e) {
+                            throw e;
+                        }
+                    }
+                }
             }
         };
 
         // Backported from MZ
-        const oWindow_Base = { _createAllParts: Window_Base.prototype._createAllParts };
+        Window.prototype._createAllParts = function () {
+            // Copied from MV
+            this._windowSpriteContainer = new PIXI.Container();
+            this._windowContentsSprite = new Sprite();
+            this._downArrowSprite = new Sprite();
+            this._upArrowSprite = new Sprite();
+            this._windowPauseSignSprite = new Sprite();
+            this.addChild(this._windowSpriteContainer);
+            this.addChild(this._windowContentsSprite);
+            this.addChild(this._downArrowSprite);
+            this.addChild(this._upArrowSprite);
+            this.addChild(this._windowPauseSignSprite);
 
-        Window_Base.prototype._createAllParts = function () {
-            oWindow_Base._createAllParts.call(this, ...arguments);
             // _createBackSprite
+            this._windowBackSprite = new Sprite();
             this._windowBackSprite.addChild(new TilingSprite());
+            this._windowSpriteContainer.addChild(this._windowBackSprite);
+
             // _createFrameSprite
+            this._windowFrameSprite = new Sprite();
             for (let i = 0; i < 8; i++) {
                 this._windowFrameSprite.addChild(new Sprite());
             }
+            this._windowSpriteContainer.addChild(this._windowFrameSprite);
+
+            // _createCursorSprite
+            this._windowCursorSprite = new Sprite();
+            for (let i = 0; i < 9; i++) {
+                this._windowCursorSprite.addChild(new Sprite());
+            }
+            this.addChild(this._windowCursorSprite);
         };
 
-        Window_Base.prototype._setRectPartsGeometry = function (sprite, srect, drect, m) {
+        Window.prototype._setRectPartsGeometry = function (sprite, srect, drect, m) {
             const sx = srect.x;
             const sy = srect.y;
             const sw = srect.width;
@@ -89,7 +277,7 @@ nwcompat.patches.push({
             }
         };
 
-        Window_Base.prototype._refreshBack = function () {
+        Window.prototype._refreshBack = function () {
             const m = this._margin;
             const w = Math.max(0, this._width - m * 2);
             const h = Math.max(0, this._height - m * 2);
@@ -109,7 +297,7 @@ nwcompat.patches.push({
             sprite.setColorTone(this._colorTone);
         };
 
-        Window_Base.prototype._refreshFrame = function () {
+        Window.prototype._refreshFrame = function () {
             const drect = { x: 0, y: 0, width: this._width, height: this._height };
             const srect = { x: 96, y: 0, width: 96, height: 96 };
             const m = 24;
@@ -119,6 +307,17 @@ nwcompat.patches.push({
             this._setRectPartsGeometry(this._windowFrameSprite, srect, drect, m);
         };
 
-        // TODO: _refreshCursor
+        Window.prototype._refreshCursor = function () {
+            const drect = this._cursorRect.clone();
+            const srect = { x: 96, y: 96, width: 48, height: 48 };
+            const m = 4;
+            for (const child of this._windowCursorSprite.children) {
+                child.bitmap = this._windowskin;
+            }
+            this._setRectPartsGeometry(this._windowCursorSprite, srect, drect, m);
+        };
+
+        // TDS Text Effects
+        _TDS_.TextEffects.Window_Base__createAllParts = Window.prototype._createAllParts;
     },
 });
