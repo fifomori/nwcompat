@@ -75,7 +75,7 @@ const fs = {
     },
 
     readdirSync(path) {
-        return nwcompat.fsReadDir(path).split(":");
+        return nwcompat.fsReadDir(path).split(":").sort();
     },
 
     mkdirSync(path) {
