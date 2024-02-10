@@ -98,17 +98,10 @@ nwcompat.patches.push({
                     this._bitmap.checkDirty();
                 }
 
-                //copy of pixi-v6 internal code
+                // PIXI.Sprite.prototype._render
                 this.calculateVertices();
-
-                if (this.pluginName === "sprite" && this._isPicture) {
-                    renderer.batch.setObjectRenderer(renderer.plugins.picture);
-                    renderer.plugins.picture.render(this);
-                } else {
-                    // use pixi super-speed renderer
-                    renderer.batch.setObjectRenderer(renderer.plugins[this.pluginName]);
-                    renderer.plugins[this.pluginName].render(this);
-                }
+                renderer.batch.setObjectRenderer(renderer.plugins[this.pluginName]);
+                renderer.plugins[this.pluginName].render(this);
             }
         };
 
