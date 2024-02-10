@@ -6,7 +6,7 @@ OMORI patches for Android
 
 Based on [chromori](https://github.com/fifomori/chromori)
 
-## If you're searchig for .apk, see [this](https://github.com/fifomori/android)
+## If you're looking for .apk, see [this](https://github.com/fifomori/android)
 
 # Building
 
