@@ -18,8 +18,8 @@
         "util": "^0.12.5"
     },
     "devDependencies": {
-        "@babel/core": "^7.23.7",
-        "@babel/preset-env": "^7.23.8",
+        "@swc/cli": "^0.3.9",
+        "@swc/core": "^1.4.0",
         "esbuild": "^0.19.5"
     },
     "browser": {

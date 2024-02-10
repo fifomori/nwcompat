@@ -1,17 +1,12 @@
 import fs from "fs/promises";
 
-import babel from "@babel/core";
+import swc from "@swc/core";
 import * as esbuild from "esbuild";
 
 const files = [
     { name: "patches", npm: false },
     { name: "require", npm: true },
 ];
-
-const babelOptions = babel.loadOptions({
-    compact: false,
-    presets: ["@babel/preset-env"],
-});
 
 try {
     await fs.mkdir("dist");
@@ -46,8 +41,8 @@ for (const file of files) {
         await fs.writeFile(`dist/${file.name}.js`, outputFile.contents);
     } else {
         start = Date.now();
-        const transform = await babel.transformAsync(outputFile.text, babelOptions);
-        console.log(`babel: '${file.name}' finished in ${Date.now() - start}ms`);
+        const transform = await swc.transform(outputFile.text);
+        console.log(`swc: '${file.name}' finished in ${Date.now() - start}ms`);
 
         await fs.writeFile(`dist/${file.name}.js`, transform.code);
     }
