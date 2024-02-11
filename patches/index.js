@@ -1,3 +1,4 @@
+require("./achievements");
 require("./misc");
 require("./oneloader");
 require("./performance");

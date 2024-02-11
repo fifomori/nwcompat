@@ -22,6 +22,8 @@
         "esbuild": "^0.19.5"
     },
     "browser": {
-        "stream": "stream-browserify"
+        "stream": "stream-browserify",
+        "fs": "./require/fs.js",
+        "path": "./require/path.js"
     }
 }

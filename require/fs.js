@@ -5,7 +5,7 @@ const fs = {
         if (!callback) return;
 
         try {
-            callback(null, __requireCache["fs"].readFileSync(path, "async"));
+            callback(null, require("fs").readFileSync(path, "async"));
         } catch (err) {
             // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another thread
             if (path.includes("CUTSCENE.json")) callback();
@@ -48,7 +48,7 @@ const fs = {
     },
 
     writeFile(path, data, callback) {
-        __requireCache["fs"].writeFileSync(path, data);
+        require("fs").writeFileSync(path, data);
         if (callback) callback();
     },
 
@@ -88,7 +88,7 @@ const fs = {
 
     stat(path, callback) {
         if (!callback) return;
-        callback(null, __requireCache["fs"].statSync(path));
+        callback(null, require("fs").statSync(path));
     },
 
     statSync(path) {
@@ -101,12 +101,12 @@ const fs = {
     },
 
     existsSync(path) {
-        return __requireCache["fs"].statSync(path).isExists();
+        return require("fs").statSync(path).isExists();
     },
 
     rename(oldPath, newPath, callback) {
         if (!callback) return;
-        callback(null, __requireCache["fs"].renameSync(oldPath, newPath));
+        callback(null, require("fs").renameSync(oldPath, newPath));
     },
 
     renameSync(oldPath, newPath) {
