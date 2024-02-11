@@ -5,6 +5,7 @@ nwcompat.patches.push({
 
         // rpg_core: around ShaderTilemap ctor
         PIXI.tilemap.Constant.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.tilemap.Constant.DO_CLEAR = true;
 
         PIXI.glCore = {
             VertexArrayObject: {},
