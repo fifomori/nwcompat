@@ -26,11 +26,12 @@ nwcompat.patches.push({
             this._backgroundSprite.filters = [blur];
         };
 
-        Scene_Menu.prototype.createBackground =
-            Scene_OmoriQuest.prototype.createBackground =
+        Scene_MenuBase.prototype.createBackground =
+            Scene_Menu.prototype.createBackground =
             Scene_OmoMenuBase.prototype.createBackground =
-            Sprite_MapCharacterTag.prototype.createBackground =
             Scene_OmoBlackLetterMenu.prototype.createBackground =
+            Scene_OmoriQuest.prototype.createBackground =
+            Sprite_MapCharacterTag.prototype.createBackground =
                 function () {
                     common_createBackgroundBlurred.call(this);
                     this.addChild(this._backgroundSprite);

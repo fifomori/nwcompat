@@ -68,7 +68,7 @@ nwcompat.patches.push({
 
         const area = document.createElement("div");
         area.className = "chromori_achievement_area";
-        document.body.appendChild(area);
+        document.head.appendChild(area);
 
         nwcompat.achievements = [];
         nwcompat.createAchievementElement = function (name, description, icon, id) {
