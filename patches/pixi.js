@@ -120,6 +120,16 @@ nwcompat.patches.push({
             PIXI.extras.PictureTilingSprite.prototype._render.call(this, ...arguments);
         };
 
+        TilingSprite.prototype.updateTransform = function () {
+            this.origin.x %= this.texture.width;
+            this.origin.y %= this.texture.height;
+
+            this.tilePosition.x = Math.round(-this.origin.x);
+            this.tilePosition.y = Math.round(-this.origin.y);
+
+            PIXI.extras.TilingSprite.prototype.updateTransform.call(this, ...arguments);
+        };
+
         //-----------------------------------------------
         // SCENES
         //-----------------------------------------------
