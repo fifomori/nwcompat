@@ -31,6 +31,7 @@ nwcompat.patches.push({
             Scene_OmoMenuBase.prototype.createBackground =
             Scene_OmoBlackLetterMenu.prototype.createBackground =
             Scene_OmoriQuest.prototype.createBackground =
+            Scene_OmoriItemShop.prototype.createBackground =
             Sprite_MapCharacterTag.prototype.createBackground =
                 function () {
                     common_createBackgroundBlurred.call(this);
