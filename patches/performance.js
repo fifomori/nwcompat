@@ -1,8 +1,8 @@
 nwcompat.patches.push({
     preload: false,
     patch: () => {
-        const path = __requireCache["path"];
-        const fs = __requireCache["fs"];
+        const path = require("path");
+        const fs = require("fs");
 
         const oSceneManager = { initGraphics: SceneManager.initGraphics };
         SceneManager.initGraphics = function () {
