@@ -4,13 +4,15 @@ const fs = {
     readFile(path, callback) {
         if (!callback) return;
 
-        try {
-            callback(null, require("fs").readFileSync(path, "async"));
-        } catch (err) {
-            // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another thread
-            if (path.includes("CUTSCENE.json")) callback();
-            else callback(err);
-        }
+        setTimeout(() => {
+            try {
+                callback(null, require("fs").readFileSync(path, "async"));
+            } catch (err) {
+                // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another ~~thread~~/idk i forgor
+                if (path.includes("CUTSCENE.json")) callback();
+                else callback(err);
+            }
+        }, 1);
     },
 
     readFileSync(path, options = "ascii") {
@@ -49,7 +51,11 @@ const fs = {
 
     writeFile(path, data, callback) {
         require("fs").writeFileSync(path, data);
-        if (callback) callback();
+        if (callback) {
+            setTimeout(() => {
+                callback();
+            }, 1);
+        }
     },
 
     writeFileSync(path, data) {
@@ -71,7 +77,10 @@ const fs = {
 
     readdir(path, callback) {
         if (!callback) return;
-        callback(null, fs.readdirSync(path));
+
+        setTimeout(() => {
+            callback(null, fs.readdirSync(path));
+        }, 1);
     },
 
     readdirSync(path) {
@@ -88,7 +97,10 @@ const fs = {
 
     stat(path, callback) {
         if (!callback) return;
-        callback(null, require("fs").statSync(path));
+
+        setTimeout(() => {
+            callback(null, require("fs").statSync(path));
+        }, 1);
     },
 
     statSync(path) {
@@ -106,7 +118,10 @@ const fs = {
 
     rename(oldPath, newPath, callback) {
         if (!callback) return;
-        callback(null, require("fs").renameSync(oldPath, newPath));
+
+        setTimeout(() => {
+            callback(null, require("fs").renameSync(oldPath, newPath));
+        }, 1);
     },
 
     renameSync(oldPath, newPath) {
