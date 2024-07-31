@@ -1,4 +1,46 @@
 nwcompat.patches.push({
+    stage: "scriptload",
+    patch: (script) => {
+        if (["YEP_EventCopier", "YEP_EventMorpher", "YEP_EventSpawner"].includes(script.name)) {
+            /*
+            Yanfly.loadMapData = function(mapId) {
+                ...
+                if(!!Utils.isOptionValid("test")) {
+                    ...
+                }
+                else {
+                    const path = require('path');
+                    const fs = require('fs');
+                    var base = path.dirname(process.mainModule.filename);
+                    let filename = 'Map%1.KEL'.format(mapId.padZero(3));
+                    Yanfly.PreloadedMaps[mapId] = null;
+
+                    // replacing this
+                    fs.readFile(base + "/data/" + filename, (err, data) => {
+                        data = Encryption.decrypt(data);
+                        Yanfly.PreloadedMaps[mapId] = JSON.parse(data.toString());
+                    })
+                    
+                    // with this
+                    const buffer = fs.readFileSync(`${base}/data/${filename}`);
+                    const data = Encryption.decrypt(buffer);
+                    Yanfly.PreloadedMaps[mapId] = JSON.parse(data.toString());
+                    
+                    // so it doesn't reading same file 1000 times because of async shit (reduces boot time from 90 to 25 seconds)
+                }
+            };
+            */
+            const search =
+                '\t\tfs.readFile(base + "/data/" + filename, (err, data) => {\n\t\t\tdata = Encryption.decrypt(data);\n\t\t\tYanfly.PreloadedMaps[mapId] = JSON.parse(data.toString());\n\t\t})';
+            const replace =
+                "const buffer = fs.readFileSync(`${base}/data/${filename}`);const data = Encryption.decrypt(buffer);Yanfly.PreloadedMaps[mapId] = JSON.parse(data.toString());";
+
+            script.source = script.source.replace(search, replace);
+        }
+    },
+});
+
+nwcompat.patches.push({
     stage: "onload",
     patch: () => {
         const path = require("path");
