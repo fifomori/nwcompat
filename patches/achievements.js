@@ -1,5 +1,5 @@
 nwcompat.patches.push({
-    preload: true,
+    stage: "preload",
     patch: () => {
         const style = document.createElement("style");
         style.innerHTML = `.chromori_achievement_area {

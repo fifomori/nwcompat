@@ -1,5 +1,5 @@
 nwcompat.patches.push({
-    preload: true,
+    stage: "preload",
     patch: () => {
         PIXI.settings.PREFER_ENV = PIXI.ENV.WEBGL2;
 

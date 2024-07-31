@@ -1,6 +1,16 @@
+type PatchStage =
+    | "preload" // before any rpgmaker scripts
+    | "onload" // window.onload
+    | "scriptload"; // every PluginManager.loadScript call (after decryption, before appendChild)
+
+interface PatchScriptData {
+    name: string;
+    source: string;
+}
+
 interface Patch {
-    preload: boolean;
-    patch: () => void;
+    stage: PatchStage;
+    patch: (data?: PatchScriptData) => void;
 }
 
 interface NWCompat {
@@ -21,7 +31,7 @@ interface NWCompat {
 
     // Web
     patches: Patch[];
-    runPatches: (preload: boolean) => void;
+    runPatches: (stage: PatchStage, data?: PatchScriptData) => void;
 
     decoder: TextDecoder;
     encoder: TextEncoder;

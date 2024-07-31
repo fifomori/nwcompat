@@ -10,14 +10,12 @@ nwcompat.dataDirectory = nwcompat.getDataDirectory();
 nwcompat.gameDirectory = nwcompat.getGameDirectory();
 
 nwcompat.patches = [];
-nwcompat.runPatches = (preload) => {
+nwcompat.runPatches = (stage, data) => {
     nwcompat.patches.forEach((patch) => {
-        if (preload && !patch.preload) return;
-        if (!preload && patch.preload) return;
-
-        console.log(`Running ${preload ? "pre" : "post"}load patch`);
-
-        patch.patch();
+        if (patch.stage === stage) {
+            console.log(`Running ${stage} stage patch`);
+            patch.patch(data);
+        }
     });
 };
 

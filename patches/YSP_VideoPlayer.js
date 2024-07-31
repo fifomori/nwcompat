@@ -23,7 +23,7 @@
  */
 
 nwcompat.patches.push({
-    preload: false,
+    stage: "onload",
     patch: () => {
         let videoCache = {};
         let videoMap = {};

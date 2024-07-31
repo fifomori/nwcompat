@@ -1,5 +1,5 @@
 nwcompat.patches.push({
-    preload: false,
+    stage: "onload",
     patch: () => {
         PIXI.filters = nwcompat.pixiFilters;
 

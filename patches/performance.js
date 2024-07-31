@@ -1,5 +1,5 @@
 nwcompat.patches.push({
-    preload: false,
+    stage: "onload",
     patch: () => {
         const path = require("path");
         const fs = require("fs");
