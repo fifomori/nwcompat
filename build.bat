@@ -7,6 +7,7 @@
 call pnpm run build
 
 if defined NWCOMPAT_DST (
+    xcopy /y "nwcompat.css" "%NWCOMPAT_DST%\app\src\main\assets\"
     xcopy /y "nwcompat.js" "%NWCOMPAT_DST%\app\src\main\assets\"
     xcopy /y "nwcompat-loader-oneloader.js" "%NWCOMPAT_DST%\app\src\main\assets\"
     xcopy /y "nwcompat-loader-main.js" "%NWCOMPAT_DST%\app\src\main\assets\js\main.js"

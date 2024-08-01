@@ -1,3 +1,23 @@
+/// <reference path="../intellisense.d.ts"/>
+
+nwcompat.patches.push({
+    stage: "preload",
+    patch: () => {
+        PIXI.settings.PREFER_ENV = PIXI.ENV.WEBGL2;
+
+        // rpg_core: around ShaderTilemap ctor
+        PIXI.tilemap.Constant.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.tilemap.Constant.DO_CLEAR = true;
+
+        PIXI.glCore = {
+            VertexArrayObject: {},
+            GLTexture: { prototype: {} },
+        };
+
+        PIXI.filters.VoidFilter = PIXI.filters.AlphaFilter;
+    },
+});
+
 nwcompat.patches.push({
     stage: "onload",
     patch: () => {
