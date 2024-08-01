@@ -54,7 +54,9 @@ nwcompat.patches.push({
         };
 
         SceneManager.snapForBackground = function () {
-            Graphics._renderer.render(this._scene, this._renderTexture);
+            Graphics._renderer.render(this._scene, {
+                renderTexture: this._renderTexture,
+            });
         };
 
         const common_createBackgroundBlurred = function () {
