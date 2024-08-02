@@ -45,8 +45,12 @@ interface NWCompat {
     createAchievementElement: (name: string, description: string, icon: string, id: string) => HTMLDivElement;
 }
 
+type PixiJS = typeof import("pixi.js") & { tilemap: typeof import("@pixi/tilemap") };
+
 interface Window {
+    PIXI: PixiJS;
     nwcompat: NWCompat;
 }
 
+declare const PIXI: PixiJS;
 declare const nwcompat: NWCompat;

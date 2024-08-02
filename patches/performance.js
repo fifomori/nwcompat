@@ -1,3 +1,5 @@
+/// <reference path="../intellisense.d.ts"/>
+
 nwcompat.patches.push({
     stage: "scriptload",
     patch: (script) => {
