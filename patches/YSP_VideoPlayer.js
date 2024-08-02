@@ -26,6 +26,7 @@
 
 nwcompat.patches.push({
     stage: "onload",
+    name: "YSP_VideoPlayer",
     patch: () => {
         let videoCache = {};
         let videoMap = {};

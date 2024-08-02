@@ -7,7 +7,7 @@ nwcompat.patches = [];
 nwcompat.runPatches = (stage, data) => {
     nwcompat.patches.forEach((patch) => {
         if (patch.stage === stage) {
-            console.log(`Running ${stage} stage patch`);
+            console.log(`Running ${stage} '${patch.name}' patch`);
             patch.patch(data);
         }
     });

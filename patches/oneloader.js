@@ -2,6 +2,7 @@
 
 nwcompat.patches.push({
     stage: "onload",
+    name: "oneloader",
     patch: () => {
         if (typeof $modLoader === "undefined") return;
 

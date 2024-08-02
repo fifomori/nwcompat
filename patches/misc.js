@@ -2,6 +2,7 @@
 
 nwcompat.patches.push({
     stage: "onload",
+    name: "misc",
     patch: () => {
         const Stats = require("stats-js");
 

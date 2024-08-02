@@ -10,6 +10,7 @@ interface PatchScriptData {
 
 interface Patch {
     stage: PatchStage;
+    name: string;
     patch: (data?: PatchScriptData) => void;
 }
 

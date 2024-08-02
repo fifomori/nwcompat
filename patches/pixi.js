@@ -2,6 +2,7 @@
 
 nwcompat.patches.push({
     stage: "preload",
+    name: "pixi",
     patch: () => {
         PIXI.settings.PREFER_ENV = PIXI.ENV.WEBGL2;
 
@@ -20,6 +21,7 @@ nwcompat.patches.push({
 
 nwcompat.patches.push({
     stage: "onload",
+    name: "pixi",
     patch: () => {
         PIXI.filters = nwcompat.pixiFilters;
 

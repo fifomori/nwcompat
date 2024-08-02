@@ -2,6 +2,7 @@
 
 nwcompat.patches.push({
     stage: "scriptload",
+    name: "performance",
     patch: (script) => {
         if (["YEP_EventCopier", "YEP_EventMorpher", "YEP_EventSpawner"].includes(script.name)) {
             /*
@@ -44,6 +45,7 @@ nwcompat.patches.push({
 
 nwcompat.patches.push({
     stage: "onload",
+    name: "performance",
     patch: () => {
         const path = require("path");
         const fs = require("fs");

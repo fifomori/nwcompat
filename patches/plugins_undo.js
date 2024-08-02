@@ -2,6 +2,7 @@
 
 nwcompat.patches.push({
     stage: "onload",
+    name: "plugins_undo",
     patch: () => {
         const oGraphics = {
             _centerElement: Graphics._centerElement,
