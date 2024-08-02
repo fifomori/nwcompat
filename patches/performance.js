@@ -53,7 +53,10 @@ nwcompat.patches.push({
         const oSceneManager = { initGraphics: SceneManager.initGraphics };
         SceneManager.initGraphics = function () {
             oSceneManager.initGraphics.call(this, ...arguments);
-            this._renderTexture = PIXI.RenderTexture.create(Graphics.width, Graphics.height);
+            this._renderTexture = PIXI.RenderTexture.create({
+                width: Graphics.width,
+                height: Graphics.height,
+            });
             this._backgroundSprite = new PIXI.Sprite(this._renderTexture);
         };
 

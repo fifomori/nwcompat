@@ -7,7 +7,6 @@ nwcompat.patches.push({
         PIXI.settings.PREFER_ENV = PIXI.ENV.WEBGL2;
 
         // rpg_core: around ShaderTilemap ctor
-        PIXI.tilemap.Constant.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         PIXI.tilemap.Constant.DO_CLEAR = true;
 
         PIXI.glCore = {
