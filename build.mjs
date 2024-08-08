@@ -23,6 +23,7 @@ for (const file of files) {
         bundle: true,
         write: false,
         legalComments: "none",
+        keepNames: true,
     };
 
     if (file.npm) {
