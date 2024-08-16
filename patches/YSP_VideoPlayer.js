@@ -57,6 +57,13 @@ nwcompat.patches.push({
             video.texture.baseTexture.resource.source.volume *= ConfigManager.bgmVolume / 100;
             video.texture.baseTexture.loop = false;
             video.texture.baseTexture.resource.source.loop = false; // Being sure that the video does not loop
+
+            // debug
+            video.texture.baseTexture.resource.source.onerror = () => {
+                console.error(
+                    `Error ${video.texture.baseTexture.resource.source.error.code}; details: ${video.texture.baseTexture.resource.source.error.message}`
+                );
+            };
             return video;
         };
 
@@ -80,7 +87,7 @@ nwcompat.patches.push({
                 if (!video.texture) continue;
                 if (!video.texture.baseTexture.resource.source.paused) continue;
 
-                if (!!this.hasVideoFinished(parseInt(id))) {
+                if (!!hasVideoFinished(parseInt(id))) {
                     continue;
                 }
                 video.texture.baseTexture.resource.source.play();
