@@ -6,7 +6,7 @@ const fs = {
 
         setTimeout(() => {
             try {
-                callback(null, require("fs").readFileSync(path, "async"));
+                callback(null, require("fs").readFileSync(path));
             } catch (err) {
                 // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another ~~thread~~/idk i forgor
                 if (path.includes("CUTSCENE.json")) callback();
@@ -21,30 +21,14 @@ const fs = {
             path = path.replace("/OMORI", "");
         }
 
-        let logStr = options == "async" ? "readFile" : "readFileSync";
-
-        logStr += `('${path}'): `;
-
-        const rs = performance.now();
         const data = nwcompat.fsReadFile(path);
-        const re = performance.now();
-        logStr += `read: ${re - rs}ms`;
 
         if (data == null) {
-            logStr += ` ENOENT`;
-            console.debug(logStr);
             throw "ENOENT";
         }
 
-        const ds = performance.now();
         const buffer = Buffer.from(data, "base64");
-        const de = performance.now();
-
-        logStr += `, decode: ${de - ds}ms`;
-
-        console.debug(logStr);
-
-        let encoding = typeof options === "string" ? options : options.encoding;
+        const encoding = typeof options === "string" ? options : options.encoding;
         if (encoding === "utf8" || encoding === "utf-8") return nwcompat.decoder.decode(buffer);
         return buffer;
     },
@@ -59,20 +43,10 @@ const fs = {
     },
 
     writeFileSync(path, data) {
-        let logStr = `writeFileSync('${path}'): typeof data: ${typeof data}`;
-
-        const es = performance.now();
         if (typeof data === "number") data = String(data);
         if (typeof data === "string") data = nwcompat.encoder.encode(data);
-        const ee = performance.now();
 
-        const ws = performance.now();
         nwcompat.fsWriteFile(path, data);
-        const we = performance.now();
-
-        logStr += `, encode: ${ee - es}ms, write: ${we - ws}ms`;
-
-        console.debug(logStr);
     },
 
     readdir(path, callback) {

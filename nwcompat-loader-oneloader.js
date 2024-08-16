@@ -2,7 +2,7 @@
 
 // Log to console instead of file
 window._logLine = function (text) {
-    console.warn(`[OneLoader] ${text}`);
+    console.log(`[OneLoader] ${text}`);
 };
 
 // Don't install DevTools vfs
