@@ -26,7 +26,7 @@
             return oPluginManager.loadScript.call(this, ...arguments);
         }
 
-        name = name.replace(".js", ".OMORI").replace(".JS", ".OMORI");
+        name = name.replace(/.js/i, ".OMORI");
         const base = path.dirname(process.mainModule.filename);
 
         const url = `${this._path}${name}`;

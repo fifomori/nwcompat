@@ -1,7 +1,7 @@
 type PatchStage =
     | "preload" // before any rpgmaker scripts
     | "onload" // window.onload
-    | "scriptload"; // every PluginManager.loadScript call (after decryption, before appendChild)
+    | "scriptload"; // PluginManager.loadScript call for suitable scripts
 
 interface PatchScriptData {
     name: string;
@@ -11,6 +11,7 @@ interface PatchScriptData {
 interface Patch {
     stage: PatchStage;
     name: string;
+    scripts?: string[];
     patch: (data?: PatchScriptData) => void;
 }
 
