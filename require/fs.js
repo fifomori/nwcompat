@@ -4,15 +4,19 @@ const fs = {
     readFile(path, callback) {
         if (!callback) return;
 
-        setTimeout(() => {
+        new Promise((resolve, reject) => {
             try {
-                callback(null, require("fs").readFileSync(path));
-            } catch (err) {
+                resolve(fs.readFileSync(path));
+            } catch (e) {
+                reject(e);
+            }
+        })
+            .then((data) => callback(null, data))
+            .catch((e) => {
                 // HACK: GTP_OmoriFixes Permanent_Manager.load throws it and it works in node because it is in another ~~thread~~/idk i forgor
                 if (path.includes("CUTSCENE.json")) callback();
-                else callback(err);
-            }
-        }, 1);
+                else callback(e);
+            });
     },
 
     readFileSync(path, options = "ascii") {
@@ -24,7 +28,7 @@ const fs = {
         const data = nwcompat.fsReadFile(path);
 
         if (data == null) {
-            throw "ENOENT";
+            throw `ENOENT: no such file or directory, open '${path}'`;
         }
 
         const buffer = Buffer.from(data, "base64");
@@ -34,11 +38,11 @@ const fs = {
     },
 
     writeFile(path, data, callback) {
-        require("fs").writeFileSync(path, data);
+        fs.writeFileSync(path, data);
         if (callback) {
-            setTimeout(() => {
-                callback();
-            }, 1);
+            new Promise((resolve, reject) => {
+                resolve();
+            }).then(() => callback());
         }
     },
 
@@ -52,9 +56,9 @@ const fs = {
     readdir(path, callback) {
         if (!callback) return;
 
-        setTimeout(() => {
-            callback(null, fs.readdirSync(path));
-        }, 1);
+        new Promise((resolve, reject) => {
+            resolve(fs.readdirSync(path));
+        }).then((data) => callback(null, data));
     },
 
     readdirSync(path) {
@@ -72,9 +76,9 @@ const fs = {
     stat(path, callback) {
         if (!callback) return;
 
-        setTimeout(() => {
-            callback(null, require("fs").statSync(path));
-        }, 1);
+        new Promise((resolve, reject) => {
+            resolve(fs.statSync(path));
+        }).then((data) => callback(null, data));
     },
 
     statSync(path) {
@@ -87,15 +91,14 @@ const fs = {
     },
 
     existsSync(path) {
-        return require("fs").statSync(path).isExists();
+        return fs.statSync(path).isExists();
     },
 
     rename(oldPath, newPath, callback) {
-        if (!callback) return;
-
-        setTimeout(() => {
-            callback(null, require("fs").renameSync(oldPath, newPath));
-        }, 1);
+        if (callback)
+            new Promise((resolve, reject) => {
+                resolve(fs.renameSync(oldPath, newPath));
+            }).then((data) => callback(null, data));
     },
 
     renameSync(oldPath, newPath) {
