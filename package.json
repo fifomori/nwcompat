@@ -3,26 +3,27 @@
         "build": "node build.mjs"
     },
     "dependencies": {
-        "@pixi/tilemap": "3.2.2",
+        "@pixi/tilemap": "^3.2.2",
         "assert": "^2.1.0",
         "browserify-zlib": "^0.2.0",
         "buffer": "^6.0.3",
-        "crypto-browserify": "^3.12.0",
+        "crypto-browserify": "^3.12.1",
         "events": "^3.3.0",
-        "js-yaml": "4.1.0",
-        "pixi-filters": "4.2.0",
+        "js-yaml": "^4.1.0",
+        "pixi-filters": "^4.2.0",
         "pixi.js": "^6.5.10",
         "stream-browserify": "^3.0.0",
         "util": "^0.12.5"
     },
     "devDependencies": {
-        "@swc/cli": "^0.3.9",
-        "@swc/core": "^1.4.0",
-        "esbuild": "^0.19.5"
+        "@swc/cli": "^0.3.14",
+        "@swc/core": "^1.9.3",
+        "esbuild": "^0.19.12"
     },
     "browser": {
         "stream": "stream-browserify",
         "fs": "./require/fs.js",
         "path": "./require/path.js"
-    }
+    },
+    "packageManager": "pnpm@9.14.2"
 }
