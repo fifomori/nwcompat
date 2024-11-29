@@ -16,9 +16,9 @@
         "util": "^0.12.5"
     },
     "devDependencies": {
-        "@swc/cli": "^0.3.14",
+        "@swc/cli": "^0.5.1",
         "@swc/core": "^1.9.3",
-        "esbuild": "^0.19.12"
+        "esbuild": "^0.24.0"
     },
     "browser": {
         "stream": "stream-browserify",
