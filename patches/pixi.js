@@ -126,11 +126,7 @@ nwcompat.patches.push({
             }
         };
 
-        ShaderTilemap.prototype.render = function (renderer) {
-            // TODO: why hack
-            this._hackRenderer(renderer);
-            PIXI.Container.prototype.render.call(this, ...arguments);
-        };
+        ShaderTilemap.prototype.render = PIXI.Container.prototype.render;
 
         TilingSprite.prototype._render = function (renderer) {
             if (this._bitmap) {
