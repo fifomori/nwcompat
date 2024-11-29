@@ -58,29 +58,29 @@ nwcompat.patches.push({
             let entry = _vfs_resolve_file_path(this._nwcompat_url);
             if (entry) {
                 this._nwcompat_responseHook = true;
-                setTimeout(() => {
-                    if (this.onload) this.onload();
-                    // this.dispatchEvent(new Event("load"));
-                }, 1);
-                return;
-            }
 
-            return oXMLHttpRequest.send.call(this, ...arguments);
+                _vfs_resolve_file(this._nwcompat_url)
+                    .then((data) => {
+                        if (this.responseType === "arraybuffer") {
+                            this._nwcompat_responseData = data.buffer;
+                        } else {
+                            this._nwcompat_responseData = data;
+                        }
+                        this.dispatchEvent(new Event("load"));
+                    })
+                    .catch((e) => {
+                        this.dispatchEvent(new Event("error"));
+                    });
+            } else {
+                return oXMLHttpRequest.send.call(this, ...arguments);
+            }
         };
 
         XMLHttpRequest = class extends XMLHttpRequest {
             get response() {
-                if (!this._nwcompat_responseHook) return super.response;
-
-                try {
-                    let data = _vfs_resolve_file_sync(this._nwcompat_url);
-                    if (this.responseType === "arraybuffer") {
-                        return data.buffer;
-                    } else {
-                        return data;
-                    }
-                } catch (e) {
-                    console.error(e);
+                if (this._nwcompat_responseHook) {
+                    return this._nwcompat_responseData;
+                } else {
                     return super.response;
                 }
             }
