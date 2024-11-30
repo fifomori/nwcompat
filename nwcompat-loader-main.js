@@ -38,7 +38,7 @@
             name: name.replace(".OMORI", ""),
             source: applySteamLibrary(buffer).toString(),
         };
-        nwcompat.runPatches("scriptload", data);
+        nwcompat.runPatches("omori", "scriptload", data);
         script.innerHTML = data.source;
 
         document.body.appendChild(script);
@@ -48,6 +48,6 @@
 // main.js
 PluginManager.setup($plugins);
 window.onload = function () {
-    nwcompat.runPatches("onload");
+    nwcompat.runPatches("omori", "onload");
     SceneManager.run(Scene_Boot);
 };

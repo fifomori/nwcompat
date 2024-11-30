@@ -2,7 +2,7 @@
 
 @REM Optional env variables
 @REM NWCOMPAT_DST: Android app source path (example: D:\Development\Java\OMORI)
-@REM NWCOMPAT_DST_ADB: OMORI path on your phone (debug apk, example: /sdcard)
+@REM NWCOMPAT_DST_ADB: Game's www directory path on your phone (debug apk, example: /sdcard/OMORI/www)
 
 call pnpm run build
 

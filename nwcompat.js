@@ -102,4 +102,5 @@ globalThis.process = {
     },
     versions: { nw: "0.46.0" },
     platform: "win32",
+    browser: true,
 };

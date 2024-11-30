@@ -8,6 +8,6 @@ _modLoader_install_debugger_vfs = function () {};
 
 const o_modLoader_runScripts = $modLoader.$runScripts;
 $modLoader.$runScripts = async function (place) {
-    if (place == "pre_window_onload") nwcompat.runPatches(false);
+    if (place == "pre_window_onload") nwcompat.runPatches("omori", "onload");
     o_modLoader_runScripts.call(this, ...arguments);
 };
