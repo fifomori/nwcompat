@@ -1,5 +1,3 @@
-/// <reference path="intellisense.d.ts"/>
-
 // rpg_managers.js
 (function () {
     const crypto = require("crypto");

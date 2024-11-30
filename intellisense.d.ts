@@ -3,6 +3,8 @@ type PatchStage =
     | "onload" // window.onload
     | "scriptload"; // PluginManager.loadScript call for suitable scripts
 
+type PatchTargetGame = "omori";
+
 interface PatchScriptData {
     name: string;
     source: string;
@@ -10,6 +12,7 @@ interface PatchScriptData {
 
 interface Patch {
     stage: PatchStage;
+    target: "common" | PatchTargetGame;
     name: string;
     scripts?: string[];
     patch: (data?: PatchScriptData) => void;
@@ -33,7 +36,7 @@ interface NWCompat {
 
     // Web
     patches: Patch[];
-    runPatches: (stage: PatchStage, data?: PatchScriptData) => void;
+    runPatches: (game: PatchTargetGame, stage: PatchStage, data?: PatchScriptData) => void;
 
     decoder: TextDecoder;
     encoder: TextEncoder;

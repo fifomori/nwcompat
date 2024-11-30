@@ -1,5 +1,3 @@
-/// <reference path="intellisense.d.ts"/>
-
 // Log to console instead of file
 window._logLine = function (text) {
     console.log(`[OneLoader] ${text}`);

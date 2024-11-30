@@ -1,7 +1,6 @@
-/// <reference path="../intellisense.d.ts"/>
-
 nwcompat.patches.push({
     stage: "onload",
+    target: "omori",
     name: "oneloader",
     patch: () => {
         if (typeof $modLoader === "undefined") return;

@@ -1,5 +1,3 @@
-/// <reference path="../intellisense.d.ts"/>
-
 const achievements = require("./achievements");
 
 module.exports = {

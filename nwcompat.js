@@ -1,14 +1,13 @@
-/// <reference path="intellisense.d.ts"/>
-
 // OneLoader compatibility
 var global = globalThis;
 
 console.log(`nwcompat running on ${navigator.userAgent}`);
 
 nwcompat.patches = [];
-nwcompat.runPatches = (stage, data) => {
+nwcompat.runPatches = (game, stage, data) => {
     nwcompat.patches.forEach((patch) => {
         if (patch.stage !== stage) return;
+        if (patch.target !== game && patch.target !== "common") return;
         if (stage === "scriptload" && !patch.scripts.includes(data.name)) return;
 
         console.log(`Running ${stage} '${patch.name}' patch`);

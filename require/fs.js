@@ -1,5 +1,3 @@
-/// <reference path="../intellisense.d.ts"/>
-
 const fs = {
     readFile(path, callback) {
         if (!callback) return;

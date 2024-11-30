@@ -1,5 +1,3 @@
-/// <reference path="../intellisense.d.ts"/>
-
 globalThis.PIXI = require("pixi.js");
 PIXI.tilemap = require("@pixi/tilemap");
 PIXI.extras = {

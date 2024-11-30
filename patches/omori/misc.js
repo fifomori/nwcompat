@@ -1,7 +1,6 @@
-/// <reference path="../intellisense.d.ts"/>
-
 nwcompat.patches.push({
     stage: "onload",
+    target: "omori",
     name: "misc",
     patch: () => {
         // fps counter based on https://github.com/mrdoob/stats.js

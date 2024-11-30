@@ -1,7 +1,6 @@
-/// <reference path="../intellisense.d.ts"/>
-
 nwcompat.patches.push({
     stage: "onload",
+    target: "omori",
     name: "plugins_undo",
     patch: () => {
         const oGraphics = {
