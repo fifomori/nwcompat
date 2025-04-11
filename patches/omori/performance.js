@@ -3,8 +3,8 @@ nwcompat.patches.push({
     target: "omori",
     name: "performance",
     patch: () => {
-        const path = require("path");
-        const fs = require("fs");
+        const pp = require("path");
+        const fs = window.require("fs");
 
         const oSceneManager = { initGraphics: SceneManager.initGraphics };
         SceneManager.initGraphics = function () {
@@ -69,7 +69,7 @@ nwcompat.patches.push({
                     $dataMap = null;
                     Graphics.startLoading();
 
-                    const base = path.dirname(process.mainModule.filename);
+                    const base = pp.dirname(process.mainModule.filename);
                     const filename = `${base}/data/Map${mapId.padZero(3)}.KEL`;
                     try {
                         const buffer = fs.readFileSync(filename);
@@ -103,7 +103,7 @@ nwcompat.patches.push({
                 DataManager.loadTilesetData();
                 DataManager._tiledLoaded = true;
             } else {
-                const base = path.dirname(process.mainModule.filename);
+                const base = pp.dirname(process.mainModule.filename);
                 const filename = `${base}/maps/map${mapId}.AUBREY`;
                 this.unloadTiledMapData();
                 try {
@@ -150,7 +150,7 @@ nwcompat.patches.push({
 
                         xhr.send();
                     } else {
-                        var base = path.dirname(process.mainModule.filename);
+                        var base = pp.dirname(process.mainModule.filename);
                         try {
                             const buffer = fs.readFileSync(base + "/maps/" + filename.replace(".json", ".AUBREY"));
                             const data = JSON.parse(Encryption.decrypt(buffer).toString());
