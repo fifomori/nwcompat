@@ -43,7 +43,7 @@ nwcompat.patches.push({
             script._url = url;
 
             const data = { name, source };
-            nwcompat.runPatches("omori", "scriptload", data);
+            nwcompat.runPatches("scriptload", data);
             script.innerHTML = data.source;
 
             document.body.appendChild(script);

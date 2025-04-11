@@ -23,7 +23,7 @@ nwcompat.patches.push({
             script.setAttribute("_url", _url);
 
             const data = { name, source };
-            nwcompat.runPatches("omori", "scriptload", data);
+            nwcompat.runPatches("scriptload", data);
             const base64 = Buffer.from(data.source).toString("base64");
             script.src = `data:text/javascript;base64,${base64}`;
 

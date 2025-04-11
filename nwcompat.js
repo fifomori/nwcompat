@@ -4,10 +4,10 @@ var global = globalThis;
 console.log(`nwcompat running on ${navigator.userAgent}`);
 
 nwcompat.patches = [];
-nwcompat.runPatches = (game, stage, data) => {
+nwcompat.runPatches = (stage, data) => {
     nwcompat.patches.forEach((patch) => {
         if (patch.stage !== stage) return;
-        if (patch.target !== game && patch.target !== "common") return;
+        if (patch.target !== nwcompat.game && patch.target !== "common") return;
         if (stage === "scriptload" && !patch.scripts.includes(data.name.split(".")[0])) return;
 
         console.log(`Running ${stage} '${patch.name}' patch`);

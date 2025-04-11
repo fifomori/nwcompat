@@ -11,4 +11,4 @@ require("./omori/performance");
 require("./omori/oneloader");
 require("./omori/YSP_VideoPlayer");
 
-nwcompat.runPatches("omori", "preload");
+nwcompat.runPatches("preload");

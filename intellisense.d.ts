@@ -37,7 +37,8 @@ interface NWCompat {
 
     // Web
     patches: Patch[];
-    runPatches: (game: PatchTargetGame, stage: PatchStage, data?: PatchScriptData) => void;
+    runPatches: (stage: PatchStage, data?: PatchScriptData) => void;
+    game: PatchTargetGame | string;
 
     dataDirectory: string;
     gameDirectory: string;
