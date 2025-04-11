@@ -2,6 +2,11 @@ const achievements = require("./achievements");
 
 module.exports = {
     initAPI() {
+        if (!(nwcompat.game in achievements)) {
+            console.error(`greenworks.initAPI: no achievements found for game '${nwcompat.game}'`);
+            return false;
+        }
+
         const fs = require("fs");
         const pp = require("path");
         const base = pp.dirname(process.mainModule.filename);
@@ -19,16 +24,16 @@ module.exports = {
         return true;
     },
     getNumberOfAchievements() {
-        return Object.keys(achievements).length;
+        return Object.keys(achievements[nwcompat.game]).length;
     },
     getAchievementNames() {
-        return Object.keys(achievements);
+        return Object.keys(achievements[nwcompat.game]);
     },
     getAchievement(name, callback) {
         callback(!!nwcompat.achievements[name]);
     },
     activateAchievement(id, successCallback, errorCallback) {
-        const info = achievements[id];
+        const info = achievements[nwcompat.game][id];
         if (!info) {
             console.error(`greenworks.activateAchievement: '${id}' not found`);
             return errorCallback();
