@@ -199,7 +199,7 @@ module.exports = {
             }
         }
         if (joined === undefined) return ".";
-        return posix.normalize(joined);
+        return this.normalize(joined);
     },
 
     /**
@@ -214,8 +214,8 @@ module.exports = {
         if (from === to) return "";
 
         // Trim leading forward slashes.
-        from = posix.resolve(from);
-        to = posix.resolve(to);
+        from = this.resolve(from);
+        to = this.resolve(to);
 
         if (from === to) return "";
 
