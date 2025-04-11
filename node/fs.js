@@ -1,3 +1,6 @@
+const decoder = new TextDecoder();
+const encoder = new TextEncoder();
+
 const fs = {
     readFile(path, callback) {
         if (!callback) return;

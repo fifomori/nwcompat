@@ -15,9 +15,6 @@ nwcompat.runPatches = (game, stage, data) => {
     });
 };
 
-nwcompat.decoder = new TextDecoder();
-nwcompat.encoder = new TextEncoder();
-
 nwcompat.dataDirectory = nwcompat.getDataDirectory();
 nwcompat.gameDirectory = nwcompat.getGameDirectory();
 

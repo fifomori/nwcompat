@@ -38,9 +38,6 @@ interface NWCompat {
     patches: Patch[];
     runPatches: (game: PatchTargetGame, stage: PatchStage, data?: PatchScriptData) => void;
 
-    decoder: TextDecoder;
-    encoder: TextEncoder;
-
     dataDirectory: string;
     gameDirectory: string;
 
