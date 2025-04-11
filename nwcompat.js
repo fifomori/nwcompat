@@ -8,10 +8,15 @@ nwcompat.runPatches = (game, stage, data) => {
     nwcompat.patches.forEach((patch) => {
         if (patch.stage !== stage) return;
         if (patch.target !== game && patch.target !== "common") return;
-        if (stage === "scriptload" && !patch.scripts.includes(data.name)) return;
+        if (stage === "scriptload" && !patch.scripts.includes(data.name.split(".")[0])) return;
 
         console.log(`Running ${stage} '${patch.name}' patch`);
-        patch.patch(data);
+        try {
+            patch.patch(data);
+        } catch (e) {
+            console.warn(e);
+            console.warn(e.stack);
+        }
     });
 };
 
