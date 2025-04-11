@@ -67,31 +67,30 @@ nwcompat.createAchievementElement = function (name, description, icon, id) {
 globalThis.require = (id) => {
     let module = __requireCache[id];
 
-    // hacky
-    if (id.startsWith("./modloader")) {
+    if (module) {
+        return module;
+    } else {
         const fs = require("fs");
         const pp = require("path");
-        // OneLoader
-        const file = fs.readFileSync(pp.join(process.cwd(), id));
 
-        function evalInScope(js, contextAsScope) {
-            return function () {
-                with (this) {
-                    return eval(js);
-                }
-            }.call(contextAsScope);
+        try {
+            const file = fs.readFileSync(pp.join(process.cwd(), id), "utf8");
+
+            function evalInScope(js, contextAsScope) {
+                return function () {
+                    with (this) {
+                        return eval(js);
+                    }
+                }.call(contextAsScope);
+            }
+
+            const context = { module: { exports: {} } };
+            evalInScope(file, context);
+            return context.module.exports;
+        } catch (e) {
+            console.error(`[nwcompat:require] module '${id}' not found`);
         }
-
-        const context = { module: { exports: {} } };
-        evalInScope(nwcompat.decoder.decode(file), context);
-        return context.module.exports;
     }
-
-    if (!module) {
-        console.error(`[nwcompat:require] module '${id}' not found`);
-        debugger;
-    }
-    return module;
 };
 
 globalThis.process = {
