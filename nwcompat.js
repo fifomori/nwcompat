@@ -20,7 +20,7 @@ nwcompat.gameDirectory = nwcompat.getGameDirectory();
 
 nwcompat.gamepad = {
     id: "xbox",
-    connected: true,
+    connected: false,
     axes: [0, 0],
     buttons: [
         { pressed: false }, // 0: A
