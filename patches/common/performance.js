@@ -63,8 +63,6 @@ nwcompat.patches.push({
         };
 
         const common_createBackgroundBlurred = function () {
-            console.debug("common_createBackgroundBlurred", this);
-
             const blur = new PIXI.filters.BlurFilter();
             blur.blur = 1;
             blur.padding = 0;
