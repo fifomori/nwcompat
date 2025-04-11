@@ -41,6 +41,7 @@ nwcompat.patches.push({
             script.type = "text/javascript";
             script.onerror = this.onError.bind(this);
             script._url = url;
+            script.setAttribute("_url", url);
 
             const data = { name, source };
             nwcompat.runPatches("scriptload", data);
