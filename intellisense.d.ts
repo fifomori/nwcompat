@@ -1,5 +1,6 @@
 type PatchStage =
     | "preload" // before any rpgmaker scripts
+    | "presetup" // before PluginManager.setup
     | "onload" // window.onload
     | "scriptload"; // PluginManager.loadScript call for suitable scripts
 
