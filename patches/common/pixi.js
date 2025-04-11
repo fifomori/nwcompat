@@ -56,7 +56,11 @@ nwcompat.patches.push({
                 });
 
                 // https://github.com/bfanger/pixi-inspector
-                globalThis.__PIXI_STAGE__ = SceneManager._scene;
+                Object.defineProperty(globalThis, "__PIXI_STAGE__", {
+                    get() {
+                        return SceneManager._scene;
+                    },
+                });
                 globalThis.__PIXI_RENDERER__ = this._renderer;
             } catch (e) {
                 this._renderer = null;
