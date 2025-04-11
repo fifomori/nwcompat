@@ -21,7 +21,6 @@ module.exports = {
     zlib: require("browserify-zlib"),
     fs: require("./fs"),
     path: require("./path"),
-    "./js/libs/greenworks": require("./greenworks"),
 };
 
 const jsYaml = require("js-yaml");
@@ -31,6 +30,9 @@ module.exports["./js/libs/js-yaml-master"] = {
     safeLoad: jsYaml.load,
     safeLoadAll: jsYaml.loadAll,
 };
+
+const greenworks = require("./greenworks");
+module.exports["./js/libs/greenworks"] = module.exports["./greenworks"] = greenworks;
 
 module.exports["os"] = {
     platform: () => process.platform,
