@@ -3,6 +3,22 @@ var global = globalThis;
 
 console.log(`nwcompat running on ${navigator.userAgent}`);
 
+nwcompat.game = (() => {
+    const data = nwcompat.fsReadFile("index.html");
+    if (!data) throw "failed to read index.html";
+
+    const dom = new DOMParser().parseFromString(window.atob(data), "text/html");
+    const el = dom.querySelector("title");
+    if (!el || !el.innerText) throw "title element not found";
+
+    const text = el.innerText.toLowerCase();
+    if (text.includes("omori")) return "omori";
+    if (text.includes("in stars and time")) return "instarsandtime";
+    return "unknown";
+})();
+
+console.log(`detected game: ${nwcompat.game}`);
+
 nwcompat.patches = [];
 nwcompat.runPatches = (stage, data) => {
     nwcompat.patches.forEach((patch) => {

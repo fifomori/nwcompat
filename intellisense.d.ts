@@ -4,7 +4,7 @@ type PatchStage =
     | "onload" // window.onload
     | "scriptload"; // PluginManager.loadScript call for suitable scripts
 
-type PatchTargetGame = "omori";
+type PatchTargetGame = "omori" | "instarsandtime";
 
 interface PatchScriptData {
     name: string;
@@ -38,7 +38,7 @@ interface NWCompat {
     // Web
     patches: Patch[];
     runPatches: (stage: PatchStage, data?: PatchScriptData) => void;
-    game: PatchTargetGame | string;
+    game: PatchTargetGame | "unknown";
 
     dataDirectory: string;
     gameDirectory: string;
