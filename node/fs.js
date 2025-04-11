@@ -66,6 +66,14 @@ const fs = {
         return nwcompat.fsReadDir(path).split(":").sort();
     },
 
+    mkdir(path, callback) {
+        if (!callback) return;
+
+        new Promise((resolve, reject) => {
+            resolve(fs.mkdirSync(path));
+        }).then((data) => callback(null, data));
+    },
+
     mkdirSync(path) {
         nwcompat.fsMkDir(path);
     },
