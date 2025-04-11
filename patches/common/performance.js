@@ -104,7 +104,14 @@ nwcompat.patches.push({
             this._globalInfo = null;
             oDataManager.saveGlobalInfo.call(this, ...arguments);
         };
+    },
+});
 
+nwcompat.patches.push({
+    stage: "presetup",
+    target: "common",
+    name: "performance",
+    patch: () => {
         // Backported from MZ
         Window.prototype._createAllParts = function () {
             // Copied from MV
