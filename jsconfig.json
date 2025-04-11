@@ -1,5 +1,5 @@
 {
     "compilerOptions": {
-        "typeRoots": ["intellisende.d.ts"]
+        "typeRoots": ["intellisense.d.ts"]
     }
 }
