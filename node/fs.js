@@ -34,7 +34,7 @@ const fs = {
 
         const buffer = Buffer.from(data, "base64");
         const encoding = typeof options === "string" ? options : options.encoding;
-        if (encoding === "utf8" || encoding === "utf-8") return nwcompat.decoder.decode(buffer);
+        if (encoding === "utf8" || encoding === "utf-8") return decoder.decode(buffer);
         return buffer;
     },
 
@@ -49,7 +49,7 @@ const fs = {
 
     writeFileSync(path, data) {
         if (typeof data === "number") data = String(data);
-        if (typeof data === "string") data = nwcompat.encoder.encode(data);
+        if (typeof data === "string") data = encoder.encode(data);
 
         nwcompat.fsWriteFile(path, data);
     },
