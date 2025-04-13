@@ -14,6 +14,19 @@ nwcompat.patches.push({
         };
 
         PIXI.filters.VoidFilter = PIXI.filters.AlphaFilter;
+
+        PIXI.tilemap.ZLayer = class extends PIXI.Container {
+            constructor(tilemap, zIndex) {
+                super();
+
+                this.tilemap = tilemap;
+                this.z = this.zIndex = zIndex;
+            }
+
+            clear() {
+                this.children.forEach((child) => child.clear());
+            }
+        };
     },
 });
 
@@ -126,55 +139,73 @@ nwcompat.patches.push({
 
         WindowLayer.prototype.initialize = function () {
             PIXI.Container.call(this);
+            this._width = 0;
+            this._height = 0;
+            this._tempCanvas = null;
+            this._translationMatrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+
+            this._windowMask = new PIXI.Graphics();
+            this._windowMask.beginFill(0xffffff, 1);
+            this._windowMask.drawRect(0, 0, 0, 0);
+            this._windowMask.endFill();
+            this._windowRect = this._windowMask.geometry.graphicsData[0].shape;
+
+            this._renderSprite = null;
+            this.filterArea = new PIXI.Rectangle();
+            this.filters = [WindowLayer.voidFilter];
         };
 
         /**
          * @param {PixiJS.Renderer} renderer
          */
         WindowLayer.prototype.render = function (renderer) {
-            if (!this.visible) {
+            if (!this.visible || !this.renderable) {
                 return;
             }
 
-            const graphics = new PIXI.Graphics();
-            const gl = renderer.gl;
-            const children = this.children.clone();
-
-            renderer.framebuffer.forceStencil();
-            graphics.transform = this.transform;
-            renderer.batch.flush();
-            gl.enable(gl.STENCIL_TEST);
-
-            while (children.length > 0) {
-                const win = children.pop();
-                if (win._isWindow && win.visible && win.openness > 0) {
-                    gl.stencilFunc(gl.EQUAL, 0, ~0);
-                    gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-                    win.render(renderer);
-                    renderer.batch.flush();
-                    graphics.clear();
-                    win.drawShape(graphics);
-                    gl.stencilFunc(gl.ALWAYS, 1, ~0);
-                    gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
-                    gl.blendFunc(gl.ZERO, gl.ONE);
-                    graphics.render(renderer);
-                    renderer.batch.flush();
-                    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-                }
+            if (this.children.length == 0) {
+                return;
             }
 
-            gl.disable(gl.STENCIL_TEST);
-            gl.clear(gl.STENCIL_BUFFER_BIT);
-            gl.clearStencil(0);
             renderer.batch.flush();
+            this.filterArea.copyFrom(this);
+            renderer.filter.push(this, this.filters);
+            renderer.batch.currentRenderer.start();
 
-            for (const child of this.children) {
-                if (!child._isWindow && child.visible) {
+            var shift = new PIXI.Point();
+            var projectionMatrix = renderer.projection.projectionMatrix;
+            shift.x = Math.round(((projectionMatrix.tx + 1) / 2) * renderer.projection.sourceFrame.width);
+            shift.y = Math.round(((projectionMatrix.ty + 1) / 2) * renderer.projection.sourceFrame.height);
+
+            for (var i = 0; i < this.children.length; i++) {
+                var child = this.children[i];
+                if (child._isWindow && child.visible && child.openness > 0) {
+                    this._maskWindow(child, shift);
+
+                    const maskData = new PIXI.MaskData();
+                    maskData.autoDetect = false;
+                    maskData.type = PIXI.MASK_TYPES.SCISSOR;
+
+                    maskData._scissorRectLocal = this._windowRect;
+
+                    renderer.mask.push(child, maskData);
+                    renderer.renderTexture.clear();
+                    renderer.mask.pop(child);
+
+                    renderer.batch.currentRenderer.start();
                     child.render(renderer);
+                    renderer.batch.currentRenderer.flush();
                 }
             }
 
             renderer.batch.flush();
+            renderer.filter.pop();
+
+            for (var j = 0; j < this.children.length; j++) {
+                if (!this.children[j]._isWindow) {
+                    this.children[j].render(renderer);
+                }
+            }
         };
 
         //-----------------------------------------------

@@ -421,4 +421,221 @@ module.exports = {
             img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1150690/d48332edc51992e551d3bee70c9fa15456341efc.jpg",
         },
     },
+    instarsandtime: {
+        act1: {
+            name: "Welcome to the show!",
+            description: "Finish getting ready.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/12d402195bffd6e5c98a7d95865544734889261a.jpg",
+        },
+        act2: {
+            name: "Break a leg!",
+            description: "Die for the first time.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/091ca7ed17abd138e32469142ab16d83aa3976b3.jpg",
+        },
+        jackpot: {
+            name: "Jackpot!",
+            description: "Do a Jackpot Attack for the first time.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/a45c5851b8dedc0334b798a59d6b0c643b62d4b3.jpg",
+        },
+        odilequest_firststrike: {
+            name: "So cute!",
+            description: "Something about spicy food…",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/c10342a0ae0ead6e77c9f34ec96081bbc757ff06.jpg",
+        },
+        kingdeath: {
+            name: "Intermission",
+            description: "Die against the King.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/acb1c96cdfe66b4b95b5e1eeae7b45b3755bebfd.jpg",
+        },
+        kingvictory: {
+            name: "Curtains!",
+            description: "Beat the King.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/26ed46072f658cf8a2bd7854a29bf99c6bdfcd5a.jpg",
+        },
+        act3: {
+            name: "Encore!",
+            description: "Get to the end.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/f6ecfe2c2e46d7a3c60e1b1fd2d57418e13d5d82.jpg",
+        },
+        pineappledeath: {
+            name: "Best idea you've ever had!",
+            description: "Snack on some pineapple slices.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/c44586ce0a5394a5116cdf83c2fc47fbf5d2b0de.jpg",
+        },
+        loop10: {
+            name: "One!",
+            description: "Loop 20 times.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/4a3f60573bea8d3931f764e5f82a84fa130bb626.jpg",
+        },
+        odilequest_main: {
+            name: "Fetch Quest",
+            description: "Hang out with Odile.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/a6400d2f3709bc622ea20fb5445dfebdf5551d6a.jpg",
+        },
+        miraquest_main: {
+            name: "Companion Quest",
+            description: "Hang out with Mirabelle.",
+            img: "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1677310/c74af2caee5e7031f004635120203096dc0719b8.jpg",
+        },
+        bonniequest_main: {
+            name: "Tutorial Quest",
+            description: "Hang out with Bonnie.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        isaquest_main: {
+            name: "Really? He doesn't need your help with a quest?",
+            description: "Hang out with Isabeau.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        sifghost1: {
+            name: "Did you see that?",
+            description: "See a ghost.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        friendquest1: {
+            name: "In this moment…",
+            description: "Hang out with everyone, and get to the end.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        kingquest: {
+            name: "Nostalgie",
+            description: "Talk to the King.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        loop50: {
+            name: "More!",
+            description: "Loop 50 times.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        loopquest: {
+            name: "IS THIS IT?",
+            description: "Learn more about the loops.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        epilogue: {
+            name: "Epilogue",
+            description: "Save Vaugarde.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        ngplus: {
+            name: "Aaaaaand SCENE!!!",
+            description: "Get to the end.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        hhm5times: {
+            name: "Your favorite play",
+            description: "Get to the end 5 times.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        isaquest_confession: {
+            name: "Wait for it…",
+            description: "Wait for it.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        loopsouvenir: {
+            name: "No thanks, stardust!",
+            description: "Show Loop a souvenir.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        bonniequest_snacks: {
+            name: "What's inside your hat, Bonnie?",
+            description: "Something about snacks…",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        miraquest_teach: {
+            name: "Teachable moment",
+            description: "Something about teaching…",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        daggerconvo: {
+            name: "Warning! Sharp!",
+            description: "Think about your dagger.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        silvercoin_secret: {
+            name: "Here's some change",
+            description: "Find out about The Incident.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        bonniequest_listen: {
+            name: "Stupid rotten adults!!!",
+            description: "Have a talk.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        isaquest_kiss: {
+            name: "Bad Touch",
+            description: "Something about a shoulder…",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        miraquest_changegod: {
+            name: "but then who was phone???",
+            description: "Talk to a statue.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        loop100: {
+            name: "Time!",
+            description: "Loop 100 times.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        loopsilvercoin: {
+            name: "What was that about…?",
+            description: "Show Loop a specific souvenir, at a specific time.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        maxaccessory: {
+            name: "Fashionable",
+            description: "Get every accessory.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        isaquest_joke: {
+            name: "You've said this joke before",
+            description: "Something about a joke...",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        odilequest_sus: {
+            name: "Kinda sus…",
+            description: "Act suspicious.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        loopending: {
+            name: "Like talking to yourself",
+            description: "Have one last chat with Loop.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        maxweapon: {
+            name: "Armory",
+            description: "Get every weapon in the same loop.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        friendquest3: {
+            name: "…You are loved.",
+            description: "Hang out with everyone, and get to the end, thrice.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        sifghost3: {
+            name: "(reloads dagger) house's haunted",
+            description: "See three ghosts in a single loop.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        "1000waystodie": {
+            name: "1000 ways to die",
+            description: "Die every way possible.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        maxmemory: {
+            name: "Head Empty",
+            description: "Get every memory.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        maxlvl: {
+            name: "OP",
+            description: "Get everyone to their max level in the same loop.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+        loopconvo: {
+            name: "Behind the scenes",
+            description: "Get every chat with Loop.",
+            img: "https://steamdb.info/static/img/appicon.svg",
+        },
+    },
 };

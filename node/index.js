@@ -54,13 +54,18 @@ module.exports["nw.gui"] = window.nw = {
                 y: window.screenY,
                 enterFullscreen: () => {},
                 leaveFullscreen: () => {},
+                isDevToolsOpen: () => false,
                 showDevTools: () => {},
                 closeDevTools: () => {},
                 moveTo: () => {},
                 on: () => {},
                 focus: () => {},
+                close: () => window.close(),
             };
         },
+    },
+    Shell: {
+        openExternal: (url) => {},
     },
     Menu: class {
         constructor() {
