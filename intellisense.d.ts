@@ -19,11 +19,19 @@ interface Patch {
     patch: (data?: PatchScriptData) => void;
 }
 
+interface NativeInfo {
+    dataDirectory: string;
+    gameDirectory: string;
+    key: string;
+
+    webViewPackage: string;
+    webViewVersion: string;
+    hostVersion: string;
+}
+
 interface NWCompat {
     // Native
-    getDataDirectory: () => string;
-    getGameDirectory: () => string;
-    getKey: () => string;
+    getNativeInfo: () => string;
 
     fsReadFile: (path: string) => string | undefined;
     fsWriteFile: (path: string, data: unknown[]) => void;
@@ -40,8 +48,7 @@ interface NWCompat {
     runPatches: (stage: PatchStage, data?: PatchScriptData) => void;
     game: PatchTargetGame | "unknown";
 
-    dataDirectory: string;
-    gameDirectory: string;
+    nativeInfo: NativeInfo;
 
     gamepad: Gamepad;
 

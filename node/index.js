@@ -40,7 +40,7 @@ module.exports["os"] = {
 
 module.exports["nw.gui"] = window.nw = {
     App: {
-        argv: [`--${nwcompat.getKey()}`],
+        argv: [`--${nwcompat.nativeInfo.key}`],
     },
     Screen: {
         Init: () => {},

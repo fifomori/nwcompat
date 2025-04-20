@@ -1,6 +1,8 @@
 // OneLoader compatibility
 var global = globalThis;
 
+nwcompat.nativeInfo = JSON.parse(nwcompat.getNativeInfo());
+
 console.log(`nwcompat running on ${navigator.userAgent}`);
 
 nwcompat.game = (() => {
@@ -35,9 +37,6 @@ nwcompat.runPatches = (stage, data) => {
         }
     });
 };
-
-nwcompat.dataDirectory = nwcompat.getDataDirectory();
-nwcompat.gameDirectory = nwcompat.getGameDirectory();
 
 nwcompat.gamepad = {
     id: "xbox",
@@ -110,12 +109,12 @@ globalThis.require = (id) => {
 };
 
 globalThis.process = {
-    cwd: () => nwcompat.gameDirectory,
+    cwd: () => nwcompat.nativeInfo.gameDirectory,
     mainModule: {
-        filename: nwcompat.gameDirectory + "/index.html", // too early for path.join
+        filename: nwcompat.nativeInfo.gameDirectory + "/index.html", // too early for path.join
     },
     env: {
-        LOCALAPPDATA: nwcompat.dataDirectory,
+        LOCALAPPDATA: nwcompat.nativeInfo.dataDirectory,
     },
     versions: { nw: "0.46.0" },
     platform: "win32",

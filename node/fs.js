@@ -22,7 +22,7 @@ const fs = {
 
     readFileSync(path, options = "ascii") {
         // redirect to /data/user/0/com.cafeed28.omori/files/
-        if (path.startsWith(nwcompat.dataDirectory)) {
+        if (path.startsWith(nwcompat.nativeInfo.dataDirectory)) {
             path = path.replace("/OMORI", "");
         }
 
