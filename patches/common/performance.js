@@ -1,7 +1,6 @@
-/// <reference path="../intellisense.d.ts"/>
-
 nwcompat.patches.push({
     stage: "scriptload",
+    target: "common",
     name: "performance",
     scripts: ["YEP_EventCopier", "YEP_EventMorpher", "YEP_EventSpawner"],
     patch: (script) => {
@@ -44,11 +43,9 @@ nwcompat.patches.push({
 
 nwcompat.patches.push({
     stage: "onload",
+    target: "common",
     name: "performance",
     patch: () => {
-        const path = require("path");
-        const fs = require("fs");
-
         const oSceneManager = { initGraphics: SceneManager.initGraphics };
         SceneManager.initGraphics = function () {
             oSceneManager.initGraphics.call(this, ...arguments);
@@ -66,8 +63,6 @@ nwcompat.patches.push({
         };
 
         const common_createBackgroundBlurred = function () {
-            console.debug("common_createBackgroundBlurred", this);
-
             const blur = new PIXI.filters.BlurFilter();
             blur.blur = 1;
             blur.padding = 0;
@@ -76,27 +71,9 @@ nwcompat.patches.push({
             this._backgroundSprite.filters = [blur];
         };
 
-        Scene_MenuBase.prototype.createBackground =
-            Scene_Menu.prototype.createBackground =
-            Scene_OmoMenuBase.prototype.createBackground =
-            Scene_OmoBlackLetterMenu.prototype.createBackground =
-            Scene_OmoriQuest.prototype.createBackground =
-            Scene_OmoriItemShop.prototype.createBackground =
-            Sprite_MapCharacterTag.prototype.createBackground =
-                function () {
-                    common_createBackgroundBlurred.call(this);
-                    this.addChild(this._backgroundSprite);
-                };
-
-        Sprite_MapCharacterTag.prototype.show = function () {
-            this._index = 0;
-            this.refreshPartySprites();
-            this.resetPartySprites();
-            SceneManager.snapForBackground();
-            this._partySpritesContainer.opacity = 0;
-            this.startStartupAnim();
-            this._released = false;
-            this._finished = false;
+        Scene_MenuBase.prototype.createBackground = function () {
+            common_createBackgroundBlurred.call(this);
+            this.addChild(this._backgroundSprite);
         };
 
         // dirty
@@ -109,16 +86,9 @@ nwcompat.patches.push({
             }
         };
 
-        DataManager._cacheMap = Yanfly.PreloadedMaps;
-        DataManager._cacheTiledMap = [];
-        DataManager._cacheTileset = [];
-
         const oDataManager = {
             loadGlobalInfo: DataManager.loadGlobalInfo,
             saveGlobalInfo: DataManager.saveGlobalInfo,
-            loadMapData: DataManager.loadMapData,
-            loadTiledMapData: DataManager.loadTiledMapData,
-            loadTilesetData: DataManager.loadTilesetData,
         };
 
         DataManager.loadGlobalInfo = function () {
@@ -132,121 +102,14 @@ nwcompat.patches.push({
             this._globalInfo = null;
             oDataManager.saveGlobalInfo.call(this, ...arguments);
         };
+    },
+});
 
-        // GTP_OmoriFixes
-        DataManager.loadMapData = function (mapId) {
-            if (!!Utils.isOptionValid("test")) {
-                return oDataManager.loadMapData.call(this, ...arguments);
-            }
-
-            if (mapId > 0) {
-                if (this._cacheMap[mapId]) {
-                    $dataMap = this._cacheMap[mapId];
-
-                    DataManager.onLoad($dataMap);
-                    Graphics.endLoading();
-                    this._mapLoader = true;
-                } else {
-                    this._mapLoader = false;
-                    $dataMap = null;
-                    Graphics.startLoading();
-
-                    const base = path.dirname(process.mainModule.filename);
-                    const filename = `${base}/data/Map${mapId.padZero(3)}.KEL`;
-                    try {
-                        const buffer = fs.readFileSync(filename);
-                        const data = Encryption.decrypt(buffer).toString();
-                        $dataMap = this._cacheMap[mapId] = JSON.parse(data);
-
-                        DataManager.onLoad($dataMap);
-                        Graphics.endLoading();
-                        this._mapLoader = true;
-                    } catch (e) {
-                        Graphics.printLoadingError(filename);
-                        SceneManager.stop();
-                    }
-                }
-
-                this.loadTiledMapData(mapId);
-            } else {
-                this.makeEmptyMap();
-                this.unloadTiledMapData();
-            }
-        };
-
-        // YED_Tiled
-        DataManager.loadTiledMapData = function (mapId) {
-            if (!!Utils.isOptionValid("test")) {
-                return oDataManager.loadTiledMapData.call(this, ...arguments);
-            }
-
-            if (this._cacheTiledMap[mapId]) {
-                DataManager._tempTiledData = this._cacheTiledMap[mapId];
-                DataManager.loadTilesetData();
-                DataManager._tiledLoaded = true;
-            } else {
-                const base = path.dirname(process.mainModule.filename);
-                const filename = `${base}/maps/map${mapId}.AUBREY`;
-                this.unloadTiledMapData();
-                try {
-                    const buffer = fs.readFileSync(filename);
-                    const decrypt = Encryption.decrypt(buffer);
-                    DataManager._tempTiledData = this._cacheTiledMap[mapId] = JSON.parse(decrypt.toString());
-                    DataManager.loadTilesetData();
-                    DataManager._tiledLoaded = true;
-                } catch (e) {
-                    console.error(e);
-                    Graphics.printLoadingError(filename);
-                    SceneManager.stop();
-                }
-            }
-        };
-
-        // YED_Tiled
-        DataManager.loadTilesetData = function () {
-            for (const tileset of DataManager._tempTiledData.tilesets) {
-                if (!tileset.source) continue;
-
-                const filename = tileset.source.replace(/^.*[\\\/]/, "");
-
-                if (this._cacheTileset[filename]) {
-                    Object.assign(tileset, this._cacheTileset[filename]);
-                } else {
-                    DataManager._tilesetToLoad++;
-                    if (Utils.isOptionValid("test")) {
-                        const xhr = new XMLHttpRequest();
-
-                        xhr.open("GET", "./maps/" + filename);
-                        xhr.overrideMimeType("application/json");
-
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState === 4) {
-                                if (xhr.status === 200 || xhr.responseText !== "") {
-                                    const data = JSON.parse(xhr.responseText);
-                                    this._cacheTileset[filename] = data;
-                                    Object.assign(tileset, data);
-                                }
-                                DataManager._tilesetToLoad--;
-                            }
-                        };
-
-                        xhr.send();
-                    } else {
-                        var base = path.dirname(process.mainModule.filename);
-                        try {
-                            const buffer = fs.readFileSync(base + "/maps/" + filename.replace(".json", ".AUBREY"));
-                            const data = JSON.parse(Encryption.decrypt(buffer).toString());
-                            this._cacheTileset[filename] = data;
-                            Object.assign(tileset, data);
-                            DataManager._tilesetToLoad--;
-                        } catch (e) {
-                            throw e;
-                        }
-                    }
-                }
-            }
-        };
-
+nwcompat.patches.push({
+    stage: "presetup",
+    target: "common",
+    name: "performance",
+    patch: () => {
         // Backported from MZ
         Window.prototype._createAllParts = function () {
             // Copied from MV
@@ -370,8 +233,5 @@ nwcompat.patches.push({
             }
             this._setRectPartsGeometry(this._windowCursorSprite, srect, drect, m);
         };
-
-        // TDS Text Effects
-        _TDS_.TextEffects.Window_Base__createAllParts = Window.prototype._createAllParts;
     },
 });

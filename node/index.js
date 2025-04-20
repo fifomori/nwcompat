@@ -1,5 +1,3 @@
-/// <reference path="../intellisense.d.ts"/>
-
 globalThis.PIXI = require("pixi.js");
 PIXI.tilemap = require("@pixi/tilemap");
 PIXI.extras = {
@@ -23,7 +21,6 @@ module.exports = {
     zlib: require("browserify-zlib"),
     fs: require("./fs"),
     path: require("./path"),
-    "./js/libs/greenworks": require("./greenworks"),
 };
 
 const jsYaml = require("js-yaml");
@@ -34,13 +31,16 @@ module.exports["./js/libs/js-yaml-master"] = {
     safeLoadAll: jsYaml.loadAll,
 };
 
+const greenworks = require("./greenworks");
+module.exports["./js/libs/greenworks"] = module.exports["./greenworks"] = greenworks;
+
 module.exports["os"] = {
     platform: () => process.platform,
 };
 
 module.exports["nw.gui"] = window.nw = {
     App: {
-        argv: [`--${nwcompat.getKey()}`],
+        argv: [`--${nwcompat.nativeInfo.key}`],
     },
     Screen: {
         Init: () => {},
@@ -54,13 +54,18 @@ module.exports["nw.gui"] = window.nw = {
                 y: window.screenY,
                 enterFullscreen: () => {},
                 leaveFullscreen: () => {},
+                isDevToolsOpen: () => false,
                 showDevTools: () => {},
                 closeDevTools: () => {},
                 moveTo: () => {},
                 on: () => {},
                 focus: () => {},
+                close: () => window.close(),
             };
         },
+    },
+    Shell: {
+        openExternal: (url) => {},
     },
     Menu: class {
         constructor() {

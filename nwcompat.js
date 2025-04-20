@@ -1,30 +1,48 @@
-/// <reference path="intellisense.d.ts"/>
-
 // OneLoader compatibility
 var global = globalThis;
 
-console.log(`nwcompat running on ${navigator.userAgent}`);
+nwcompat.nativeInfo = JSON.parse(nwcompat.getNativeInfo());
+
+console.log("hello from nwcompat");
+console.log(`webview: ${nwcompat.nativeInfo.webViewPackage} ${nwcompat.nativeInfo.webViewVersion}`);
+console.log(`host: ${nwcompat.nativeInfo.hostVersion}, useragent: ${navigator.userAgent}`);
+
+nwcompat.game = (() => {
+    const data = nwcompat.fsReadFile("index.html");
+    if (!data) throw "failed to read index.html";
+
+    const dom = new DOMParser().parseFromString(window.atob(data), "text/html");
+    const el = dom.querySelector("title");
+    if (!el || !el.innerText) throw "title element not found";
+
+    const text = el.innerText.toLowerCase();
+    if (text.includes("omori")) return "omori";
+    if (text.includes("in stars and time")) return "instarsandtime";
+    return "unknown";
+})();
+
+console.log(`detected game: ${nwcompat.game}`);
 
 nwcompat.patches = [];
 nwcompat.runPatches = (stage, data) => {
     nwcompat.patches.forEach((patch) => {
         if (patch.stage !== stage) return;
-        if (stage === "scriptload" && !patch.scripts.includes(data.name)) return;
+        if (patch.target !== nwcompat.game && patch.target !== "common") return;
+        if (stage === "scriptload" && !patch.scripts.includes(data.name.split(".")[0])) return;
 
         console.log(`Running ${stage} '${patch.name}' patch`);
-        patch.patch(data);
+        try {
+            patch.patch(data);
+        } catch (e) {
+            console.warn(e);
+            console.warn(e.stack);
+        }
     });
 };
 
-nwcompat.decoder = new TextDecoder();
-nwcompat.encoder = new TextEncoder();
-
-nwcompat.dataDirectory = nwcompat.getDataDirectory();
-nwcompat.gameDirectory = nwcompat.getGameDirectory();
-
 nwcompat.gamepad = {
     id: "xbox",
-    connected: true,
+    connected: false,
     axes: [0, 0],
     buttons: [
         { pressed: false }, // 0: A
@@ -66,41 +84,41 @@ nwcompat.createAchievementElement = function (name, description, icon, id) {
 globalThis.require = (id) => {
     let module = __requireCache[id];
 
-    // hacky
-    if (id.startsWith("./modloader")) {
+    if (module) {
+        return module;
+    } else {
         const fs = require("fs");
         const pp = require("path");
-        // OneLoader
-        const file = fs.readFileSync(pp.join(process.cwd(), id));
 
-        function evalInScope(js, contextAsScope) {
-            return function () {
-                with (this) {
-                    return eval(js);
-                }
-            }.call(contextAsScope);
+        try {
+            const file = fs.readFileSync(pp.join(process.cwd(), id), "utf8");
+
+            function evalInScope(js, contextAsScope) {
+                return function () {
+                    with (this) {
+                        return eval(js);
+                    }
+                }.call(contextAsScope);
+            }
+
+            const context = { module: { exports: {} } };
+            evalInScope(file, context);
+            return context.module.exports;
+        } catch (e) {
+            console.error(`[nwcompat:require] module '${id}' not found`);
         }
-
-        const context = { module: { exports: {} } };
-        evalInScope(nwcompat.decoder.decode(file), context);
-        return context.module.exports;
     }
-
-    if (!module) {
-        console.error(`[nwcompat:require] module '${id}' not found`);
-        debugger;
-    }
-    return module;
 };
 
 globalThis.process = {
-    cwd: () => nwcompat.gameDirectory,
+    cwd: () => nwcompat.nativeInfo.gameDirectory,
     mainModule: {
-        filename: nwcompat.gameDirectory + "/index.html", // too early for path.join
+        filename: nwcompat.nativeInfo.gameDirectory + "/index.html", // too early for path.join
     },
     env: {
-        LOCALAPPDATA: nwcompat.dataDirectory,
+        LOCALAPPDATA: nwcompat.nativeInfo.dataDirectory,
     },
     versions: { nw: "0.46.0" },
     platform: "win32",
+    browser: true,
 };

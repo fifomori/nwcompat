@@ -16,14 +16,13 @@
         "util": "^0.12.5"
     },
     "devDependencies": {
-        "@swc/cli": "^0.5.1",
-        "@swc/core": "^1.9.3",
         "esbuild": "^0.24.0"
     },
     "browser": {
+        "crypto": "crypto-browserify",
         "stream": "stream-browserify",
-        "fs": "./require/fs.js",
-        "path": "./require/path.js"
+        "fs": "./node/fs.js",
+        "path": "./node/path.js"
     },
-    "packageManager": "pnpm@9.14.2"
+    "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
 }

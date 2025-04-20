@@ -1,7 +1,10 @@
 type PatchStage =
     | "preload" // before any rpgmaker scripts
+    | "presetup" // before PluginManager.setup
     | "onload" // window.onload
     | "scriptload"; // PluginManager.loadScript call for suitable scripts
+
+type PatchTargetGame = "omori" | "instarsandtime";
 
 interface PatchScriptData {
     name: string;
@@ -10,16 +13,25 @@ interface PatchScriptData {
 
 interface Patch {
     stage: PatchStage;
+    target: "common" | PatchTargetGame;
     name: string;
     scripts?: string[];
     patch: (data?: PatchScriptData) => void;
 }
 
+interface NativeInfo {
+    dataDirectory: string;
+    gameDirectory: string;
+    key: string;
+
+    webViewPackage: string;
+    webViewVersion: string;
+    hostVersion: string;
+}
+
 interface NWCompat {
     // Native
-    getDataDirectory: () => string;
-    getGameDirectory: () => string;
-    getKey: () => string;
+    getNativeInfo: () => string;
 
     fsReadFile: (path: string) => string | undefined;
     fsWriteFile: (path: string, data: unknown[]) => void;
@@ -34,12 +46,9 @@ interface NWCompat {
     // Web
     patches: Patch[];
     runPatches: (stage: PatchStage, data?: PatchScriptData) => void;
+    game: PatchTargetGame | "unknown";
 
-    decoder: TextDecoder;
-    encoder: TextEncoder;
-
-    dataDirectory: string;
-    gameDirectory: string;
+    nativeInfo: NativeInfo;
 
     gamepad: Gamepad;
 

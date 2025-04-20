@@ -1,5 +1,3 @@
-/// <reference path="../intellisense.d.ts"/>
-
 // YSP_VideoPlayer patched for pixi v6
 // merged with patches from GTP_OmoriFixes
 // source: https://github.com/suppayami/yami-small-plugins
@@ -26,6 +24,7 @@
 
 nwcompat.patches.push({
     stage: "onload",
+    target: "omori",
     name: "YSP_VideoPlayer",
     patch: () => {
         let videoCache = {};

@@ -1,4 +1,5 @@
-/// <reference path="../intellisense.d.ts"/>
+const decoder = new TextDecoder();
+const encoder = new TextEncoder();
 
 const fs = {
     readFile(path, callback) {
@@ -21,7 +22,7 @@ const fs = {
 
     readFileSync(path, options = "ascii") {
         // redirect to /data/user/0/com.cafeed28.omori/files/
-        if (path.startsWith(nwcompat.dataDirectory)) {
+        if (path.startsWith(nwcompat.nativeInfo.dataDirectory)) {
             path = path.replace("/OMORI", "");
         }
 
@@ -33,7 +34,7 @@ const fs = {
 
         const buffer = Buffer.from(data, "base64");
         const encoding = typeof options === "string" ? options : options.encoding;
-        if (encoding === "utf8" || encoding === "utf-8") return nwcompat.decoder.decode(buffer);
+        if (encoding === "utf8" || encoding === "utf-8") return decoder.decode(buffer);
         return buffer;
     },
 
@@ -48,7 +49,7 @@ const fs = {
 
     writeFileSync(path, data) {
         if (typeof data === "number") data = String(data);
-        if (typeof data === "string") data = nwcompat.encoder.encode(data);
+        if (typeof data === "string") data = encoder.encode(data);
 
         nwcompat.fsWriteFile(path, data);
     },
@@ -63,6 +64,14 @@ const fs = {
 
     readdirSync(path) {
         return nwcompat.fsReadDir(path).split(":").sort();
+    },
+
+    mkdir(path, callback) {
+        if (!callback) return;
+
+        new Promise((resolve, reject) => {
+            resolve(fs.mkdirSync(path));
+        }).then((data) => callback(null, data));
     },
 
     mkdirSync(path) {
