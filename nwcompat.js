@@ -3,7 +3,9 @@ var global = globalThis;
 
 nwcompat.nativeInfo = JSON.parse(nwcompat.getNativeInfo());
 
-console.log(`nwcompat running on ${navigator.userAgent}`);
+console.log("hello from nwcompat");
+console.log(`webview: ${nwcompat.nativeInfo.webViewPackage} ${nwcompat.nativeInfo.webViewVersion}`);
+console.log(`host: ${nwcompat.nativeInfo.hostVersion}, useragent: ${navigator.userAgent}`);
 
 nwcompat.game = (() => {
     const data = nwcompat.fsReadFile("index.html");
