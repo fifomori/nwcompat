@@ -3,6 +3,9 @@ require("./common/misc");
 require("./common/pixi");
 require("./common/performance");
 
+require("./instarsandtime/loader");
+require("./instarsandtime/performance");
+
 require("./omori/loader");
 require("./omori/pixi");
 require("./omori/misc");
