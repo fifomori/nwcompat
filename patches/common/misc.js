@@ -15,5 +15,10 @@ nwcompat.patches.push({
             // should run only once
             SceneManager.changeScene = oSceneManager.changeScene;
         };
+
+        const oTouchInput = { _onTouchStart: TouchInput._onTouchStart };
+        TouchInput._onTouchStart = function () {
+            if (nwcompat.touchInputEnabled) oTouchInput._onTouchStart.call(this, ...arguments);
+        };
     },
 });

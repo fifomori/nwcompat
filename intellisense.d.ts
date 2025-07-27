@@ -51,6 +51,7 @@ interface NWCompat {
     nativeInfo: NativeInfo;
 
     gamepad: Gamepad;
+    touchInputEnabled: boolean;
 
     achievements: string[];
     createAchievementElement: (name: string, description: string, icon: string, id: string) => HTMLDivElement;
