@@ -31,45 +31,9 @@ module.exports["./js/libs/js-yaml-master"] = {
     safeLoadAll: jsYaml.loadAll,
 };
 
-const greenworks = require("./greenworks");
-module.exports["./js/libs/greenworks"] = module.exports["./greenworks"] = greenworks;
+module.exports["./js/libs/greenworks"] = module.exports["./greenworks"] = require("./greenworks");
+module.exports["nw.gui"] = window.nw = require("./nw");
 
 module.exports["os"] = {
     platform: () => process.platform,
-};
-
-module.exports["nw.gui"] = window.nw = {
-    App: {
-        argv: [`--${nwcompat.nativeInfo.key}`],
-    },
-    Screen: {
-        Init: () => {},
-        on: () => {},
-    },
-    Window: {
-        get: () => {
-            return {
-                isFullscreen: false,
-                x: window.screenX,
-                y: window.screenY,
-                enterFullscreen: () => {},
-                leaveFullscreen: () => {},
-                isDevToolsOpen: () => false,
-                showDevTools: () => {},
-                closeDevTools: () => {},
-                moveTo: () => {},
-                on: () => {},
-                focus: () => {},
-                close: () => window.close(),
-            };
-        },
-    },
-    Shell: {
-        openExternal: (url) => {},
-    },
-    Menu: class {
-        constructor() {
-            this.createMacBuiltin = () => {};
-        }
-    },
 };
