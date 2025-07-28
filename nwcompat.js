@@ -64,8 +64,6 @@ nwcompat.gamepad = {
     ],
 };
 
-nwcompat.touchInputEnabled = false;
-
 navigator.getGamepads = () => {
     return [nwcompat.gamepad];
 };

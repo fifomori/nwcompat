@@ -18,7 +18,11 @@ nwcompat.patches.push({
 
         const oTouchInput = { _onTouchStart: TouchInput._onTouchStart };
         TouchInput._onTouchStart = function () {
-            if (nwcompat.touchInputEnabled) oTouchInput._onTouchStart.call(this, ...arguments);
+            if (this._touchInputEnabled) oTouchInput._onTouchStart.call(this, ...arguments);
+        };
+
+        TouchInput._toggleTouchInput = function () {
+            this._touchInputEnabled = !this._touchInputEnabled;
         };
     },
 });
