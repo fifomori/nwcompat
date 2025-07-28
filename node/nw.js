@@ -9,7 +9,7 @@ module.exports = {
     Window: {
         get: () => {
             return {
-                isFullscreen: false,
+                isFullscreen: true,
                 x: window.screenX,
                 y: window.screenY,
                 enterFullscreen: () => {},

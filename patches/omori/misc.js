@@ -212,7 +212,8 @@ nwcompat.patches.push({
 
         const oWindow_OmoMenuOptionsGeneral = {
             makeOptionsList: Window_OmoMenuOptionsGeneral.prototype.makeOptionsList,
-            processOptionCommand: Window_OmoMenuOptionsGeneral.prototype.processOptionCommand,
+            cursorLeft: Window_OmoMenuOptionsGeneral.prototype.cursorLeft,
+            cursorRight: Window_OmoMenuOptionsGeneral.prototype.cursorRight,
         };
 
         // remove resolution and fullscreen options
@@ -222,11 +223,22 @@ nwcompat.patches.push({
         };
 
         // skip resolution and fullscreen options when changing options
-        Window_OmoMenuOptionsGeneral.prototype.processOptionCommand = function () {
+        Window_OmoMenuOptionsGeneral.prototype.cursorLeft = function () {
             this._index += 2;
             this._optionsList.unshift(null, null);
 
-            oWindow_OmoMenuOptionsGeneral.processOptionCommand.call(this, ...arguments);
+            oWindow_OmoMenuOptionsGeneral.cursorLeft.call(this, ...arguments);
+
+            this._index -= 2;
+            this._optionsList = this._optionsList.slice(2);
+        };
+
+        // skip resolution and fullscreen options when changing options
+        Window_OmoMenuOptionsGeneral.prototype.cursorRight = function () {
+            this._index += 2;
+            this._optionsList.unshift(null, null);
+
+            oWindow_OmoMenuOptionsGeneral.cursorRight.call(this, ...arguments);
 
             this._index -= 2;
             this._optionsList = this._optionsList.slice(2);
