@@ -27,6 +27,11 @@ nwcompat.patches.push({
                 this.children.forEach((child) => child.clear());
             }
         };
+
+        PIXI.ticker = {
+            Ticker: PIXI.Ticker,
+            shared: PIXI.Ticker.shared,
+        };
     },
 });
 

@@ -28,51 +28,11 @@ nwcompat.patches.push({
             }
         };
 
-        // GTP_OmoriFixes: remove steam overlay "fix" that causes overscroll
+        // GTP_OmoriFixes: remove steam overlay fix because it causes overscroll
         Graphics._createCanvas = function () {
             oGraphics._createCanvas.call(this, ...arguments);
             this._overlayFix.remove();
-        };
-
-        const oSceneManager = { initGraphics: SceneManager.initGraphics };
-
-        // GTP_OmoriFixes: undo SceneManager changes
-        SceneManager.initGraphics = function () {
-            oSceneManager.initGraphics.call(this, ...arguments);
-            this.ticker = PIXI.Ticker.shared;
-        };
-
-        SceneManager.update = function () {
-            try {
-                Graphics.tickStart();
-                this.updateInputData();
-                this.updateManagers();
-                this.updateMain();
-                Graphics.tickEnd();
-            } catch (e) {
-                this.catchException(e);
-            }
-        };
-
-        SceneManager.updateMain = function () {
-            this.changeScene();
-            this.updateScene();
-            this.renderScene();
-            this.requestUpdate();
-        };
-
-        SceneManager.requestUpdate = function () {
-            if (!this._stopped) {
-                requestAnimationFrame(this.update.bind(this));
-            }
-        };
-
-        SceneManager.stop = function () {
-            this._stopped = true;
-        };
-
-        SceneManager.isFocus = function () {
-            return true;
+            this._overlayFix = undefined;
         };
     },
 });
