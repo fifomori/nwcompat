@@ -1,3 +1,37 @@
+class NwWindow extends EventTarget {
+    constructor() {
+        super();
+        this.isFullscreen = true;
+    }
+
+    get x() {
+        return window.screenX;
+    }
+
+    get y() {
+        return window.screenY;
+    }
+
+    enterFullscreen() {}
+    leaveFullscreen() {}
+
+    showDevTools() {}
+    closeDevTools() {}
+    isDevToolsOpen() {
+        return false;
+    }
+
+    moveTo() {}
+    focus() {}
+    close() {}
+
+    on(eventName, callback) {
+        this.addEventListener(eventName, callback);
+    }
+}
+
+const nwWindow = new NwWindow();
+
 module.exports = {
     App: {
         argv: [`--${nwcompat.nativeInfo.key}`],
@@ -7,22 +41,7 @@ module.exports = {
         on: () => {},
     },
     Window: {
-        get: () => {
-            return {
-                isFullscreen: true,
-                x: window.screenX,
-                y: window.screenY,
-                enterFullscreen: () => {},
-                leaveFullscreen: () => {},
-                isDevToolsOpen: () => false,
-                showDevTools: () => {},
-                closeDevTools: () => {},
-                moveTo: () => {},
-                on: () => {},
-                focus: () => {},
-                close: () => window.close(),
-            };
-        },
+        get: () => nwWindow,
     },
     Shell: {
         openExternal: (url) => {},
