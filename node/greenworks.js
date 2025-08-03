@@ -39,6 +39,10 @@ module.exports = {
             return errorCallback();
         }
 
+        if (nwcompat.achievements[id] === true) {
+            return;
+        }
+
         nwcompat.achievements[id] = true;
         successCallback(true);
 
