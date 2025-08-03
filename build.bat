@@ -14,7 +14,5 @@ if defined NWCOMPAT_DST (
     xcopy /y /s "dist\*" "%NWCOMPAT_DST%\app\src\main\assets\"
     if defined NWCOMPAT_DST_ADB (
         adb push "%NWCOMPAT_DST%\app\src\main\assets" "%NWCOMPAT_DST_ADB%"
-        @REM adb push "%NWCOMPAT_DST%\app\src\main\assets" "/sdcard/rpgmaker/omori"
-        @REM adb push "%NWCOMPAT_DST%\app\src\main\assets" "/sdcard/rpgmaker/instarsandtime"
     )
 )

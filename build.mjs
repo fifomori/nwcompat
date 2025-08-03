@@ -9,11 +9,11 @@ let esbuildOptions = {
     entryPoints: ["bundle.js"],
     outdir: "dist",
     bundle: true,
-    // minify: true,
+    minify: true,
     keepNames: true,
     globalName: "__requireCache",
     define: { global: "globalThis" },
-    // sourcemap: "linked",
+    sourcemap: "linked",
     legalComments: "none",
 };
 
