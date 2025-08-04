@@ -22,6 +22,19 @@ nwcompat.patches.push({
             });
         };
 
+        // GTP_OmoriFixes
+        SceneManager.update = function () {
+            Graphics.tickStart();
+            try {
+                this.updateManagers();
+                this.updateMain();
+            } catch (e) {
+                this.catchException(e);
+            }
+            this.renderScene();
+            Graphics.tickEnd();
+        };
+
         Scene_Menu.prototype.createBackground =
             Scene_OmoMenuBase.prototype.createBackground =
             Scene_OmoBlackLetterMenu.prototype.createBackground =
