@@ -212,8 +212,7 @@ nwcompat.patches.push({
 
         const oWindow_OmoMenuOptionsGeneral = {
             makeOptionsList: Window_OmoMenuOptionsGeneral.prototype.makeOptionsList,
-            cursorLeft: Window_OmoMenuOptionsGeneral.prototype.cursorLeft,
-            cursorRight: Window_OmoMenuOptionsGeneral.prototype.cursorRight,
+            processOptionCommand: Window_OmoMenuOptionsGeneral.prototype.processOptionCommand,
         };
 
         // remove resolution and fullscreen options
@@ -223,25 +222,36 @@ nwcompat.patches.push({
         };
 
         // skip resolution and fullscreen options when changing options
-        Window_OmoMenuOptionsGeneral.prototype.cursorLeft = function () {
+        Window_OmoMenuOptionsGeneral.prototype.processOptionCommand = function () {
             this._index += 2;
             this._optionsList.unshift(null, null);
 
-            oWindow_OmoMenuOptionsGeneral.cursorLeft.call(this, ...arguments);
+            oWindow_OmoMenuOptionsGeneral.processOptionCommand.call(this, ...arguments);
 
             this._index -= 2;
             this._optionsList = this._optionsList.slice(2);
         };
 
-        // skip resolution and fullscreen options when changing options
-        Window_OmoMenuOptionsGeneral.prototype.cursorRight = function () {
-            this._index += 2;
-            this._optionsList.unshift(null, null);
+        // remove buzzer when trying to change removed resolution option
+        Window_OmoMenuOptionsGeneral.prototype.cursorRight = function (wrap) {
+            Window_Selectable.prototype.cursorRight.call(this, wrap);
+            const data = this._optionsList[this.index()];
+            if (data) {
+                data.index = (data.index + 1) % data.options.length;
+                this.processOptionCommand();
+                this.updateCursor();
+            }
+        };
 
-            oWindow_OmoMenuOptionsGeneral.cursorRight.call(this, ...arguments);
-
-            this._index -= 2;
-            this._optionsList = this._optionsList.slice(2);
+        // remove buzzer when trying to change removed resolution option
+        Window_OmoMenuOptionsGeneral.prototype.cursorLeft = function (wrap) {
+            Window_Selectable.prototype.cursorLeft.call(this, wrap);
+            const data = this._optionsList[this.index()];
+            if (data) {
+                data.index = (data.index - 1 + data.options.length) % data.options.length;
+                this.processOptionCommand();
+                this.updateCursor();
+            }
         };
     },
 });
