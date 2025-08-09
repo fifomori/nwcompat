@@ -40,6 +40,41 @@ nwcompat.runPatches = (stage, data) => {
     });
 };
 
+nwcompat.loadData = function () {
+    const fs = require("fs");
+    const pp = require("path");
+
+    const base = pp.dirname(process.mainModule.filename);
+    const savePath = pp.join(base, "save");
+    const configPath = pp.join(savePath, "nwcompat.json");
+
+    if (!fs.existsSync(savePath)) fs.mkdirSync(savePath);
+    if (!fs.existsSync(configPath)) fs.writeFileSync(configPath, "{}");
+
+    const file = JSON.parse(fs.readFileSync(configPath, "ascii") || "{}");
+
+    // old format, convert to object
+    if (Array.isArray(file.achievements)) {
+        // TODO migration (but were there any saved achievements if this shit was broken??)
+        file.achievements = {};
+    }
+
+    nwcompat.savedData = {};
+    nwcompat.savedData.achievements = file.achievements || {};
+};
+
+nwcompat.saveData = function () {
+    const fs = require("fs");
+    const pp = require("path");
+    const base = pp.dirname(process.mainModule.filename);
+
+    const configPath = pp.join(base, "save", "nwcompat.json");
+
+    fs.writeFile(configPath, JSON.stringify(nwcompat.savedData), () => {
+        // TODO alert user if save failed
+    });
+};
+
 nwcompat.gamepad = {
     id: "xbox",
     connected: false,
@@ -68,7 +103,6 @@ navigator.getGamepads = () => {
     return [nwcompat.gamepad];
 };
 
-nwcompat.achievements = [];
 nwcompat.createAchievementElement = function (name, description, icon, id) {
     const el = document.createElement("div");
     el.className = "chromori_achievement";

@@ -29,6 +29,10 @@ interface NativeInfo {
     hostVersion: string;
 }
 
+interface SavedData {
+    achievements: Record<string, boolean>;
+}
+
 interface NWCompat {
     // Native
     getNativeInfo: () => string;
@@ -49,10 +53,10 @@ interface NWCompat {
     game: PatchTargetGame | "unknown";
 
     nativeInfo: NativeInfo;
+    savedData: SavedData;
+    loadData: () => void;
+    saveData: () => void;
 
-    gamepad: Gamepad;
-
-    achievements: string[];
     createAchievementElement: (name: string, description: string, icon: string, id: string) => HTMLDivElement;
 }
 

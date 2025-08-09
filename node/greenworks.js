@@ -7,20 +7,6 @@ module.exports = {
             return false;
         }
 
-        const fs = require("fs");
-        const pp = require("path");
-        const base = pp.dirname(process.mainModule.filename);
-
-        const savePath = pp.join(base, "save");
-        const configPath = pp.join(savePath, "nwcompat.json");
-
-        if (!fs.existsSync(savePath)) fs.mkdirSync(savePath);
-        if (!fs.existsSync(configPath)) fs.writeFileSync(configPath, "{}");
-
-        const file = JSON.parse(fs.readFileSync(configPath, "ascii") || "{}");
-        if (Array.isArray(file.achievements)) nwcompat.achievements = file.achievements;
-        else nwcompat.achievements = [];
-
         return true;
     },
     getNumberOfAchievements() {
@@ -30,7 +16,7 @@ module.exports = {
         return Object.keys(achievements[nwcompat.game]);
     },
     getAchievement(name, callback) {
-        callback(!!nwcompat.achievements[name]);
+        callback(!!nwcompat.savedData.achievements[name]);
     },
     activateAchievement(id, successCallback, errorCallback) {
         const info = achievements[nwcompat.game][id];
@@ -39,19 +25,14 @@ module.exports = {
             return errorCallback();
         }
 
-        if (nwcompat.achievements[id] === true) {
+        if (nwcompat.savedData.achievements[id] === true) {
             return;
         }
 
-        nwcompat.achievements[id] = true;
+        nwcompat.savedData.achievements[id] = true;
+        nwcompat.saveData();
+
         successCallback(true);
-
-        const fs = require("fs");
-        const pp = require("path");
-        const base = pp.dirname(process.mainModule.filename);
-
-        const configPath = pp.join(base, "save", "nwcompat.json");
-        fs.writeFileSync(configPath, JSON.stringify({ achievements: nwcompat.achievements }));
 
         const el = nwcompat.createAchievementElement(info.name, info.description, info.img, id);
         document.querySelector(".chromori_achievement_area").appendChild(el);
