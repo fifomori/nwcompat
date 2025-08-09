@@ -111,7 +111,7 @@ nwcompat.patches.push({
 
             constructor() {
                 this.dom = document.createElement("div");
-                this.dom.style.cssText = "position: fixed; top: 16px; left: 32px; opacity: 0.9; z-index: 10000;";
+                this.dom.style.cssText = "position: fixed; top: 16px; left: 32px; opacity: 0.9; z-index: 100;";
 
                 this.beginTime = performance.now();
                 this.prevTime = this.beginTime;
@@ -145,10 +145,10 @@ nwcompat.patches.push({
                 this.frames++;
 
                 const time = performance.now();
-                this.msPanel.update(time - this.beginTime, 200);
+                this.msPanel.update(time - this.beginTime, 100);
 
                 if (time >= this.prevTime + 1000) {
-                    this.fpsPanel.update((this.frames * 1000) / (time - this.prevTime), 100);
+                    this.fpsPanel.update((this.frames * 1000) / (time - this.prevTime), 60);
 
                     this.prevTime = time;
                     this.frames = 0;
@@ -205,6 +205,8 @@ nwcompat.patches.push({
             this._visible = false;
             this._stats.setMode(-1);
         };
+
+        Graphics._createModeBox = function () {};
 
         Graphics._toggleFPSCounter = function () {
             this._fpsMeter.toggle();

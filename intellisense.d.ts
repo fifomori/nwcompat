@@ -68,6 +68,7 @@ type PixiJS = typeof import("pixi.js") & {
 interface Window {
     PIXI: PixiJS;
     nwcompat: NWCompat;
+    document: Document;
 }
 
 declare const PIXI: PixiJS;

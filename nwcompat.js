@@ -30,12 +30,13 @@ nwcompat.runPatches = (stage, data) => {
         if (patch.target !== nwcompat.game && patch.target !== "common") return;
         if (stage === "scriptload" && !patch.scripts.includes(data.name.split(".")[0])) return;
 
-        console.log(`Running ${stage} '${patch.name}' patch`);
+        console.log(`Running ${stage} '${patch.target}/${patch.name}' patch`);
         try {
             patch.patch(data);
         } catch (e) {
             console.warn(e);
             console.warn(e.stack);
+            debugger;
         }
     });
 };
