@@ -243,8 +243,8 @@ class Pad {
     _onPointerDown(e) {
         if (Draggable.inEditMode) return;
 
-        const button = e.target.closest(".button");
-        if (!button || !this.root.contains(button)) return;
+        const button = this.#getButtonAt(e.clientX, e.clientY);
+        if (!button) return;
         this.#press(button, e.pointerId);
     }
 

@@ -112,13 +112,15 @@
     touch-action: none;
     -webkit-tap-highlight-color: transparent;
 
-    color: white;
+    color: rgba(255, 255, 255, 0.25);
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    outline: solid white 4px;
+    outline-style: solid;
+    outline-color: rgba(255, 255, 255, 0.25);
+    outline-width: 4px;
     outline-offset: -4px;
 
     width: var(--nwcompat-gamepad-button-size);
