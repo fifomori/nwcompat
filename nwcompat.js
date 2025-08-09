@@ -104,15 +104,30 @@ navigator.getGamepads = () => {
 };
 
 nwcompat.createAchievementElement = function (name, description, icon, id) {
-    const el = document.createElement("div");
-    el.className = "chromori_achievement";
-    el.id = id;
-    el.innerHTML = `<div class="chromori_achievement_icon" style="background-image: url(${icon})"></div>
-                    <div class="chromori_achievement_text">
-                        <div class="chromori_achievement_name">${name}</div>
-                        <div class="chromori_achievement_desc">${description}</div>
-                    </div>`;
-    return el;
+    const elRoot = document.createElement("div");
+    elRoot.className = "nwcomapt-achievement";
+    elRoot.id = id;
+
+    const elIcon = document.createElement("div");
+    elIcon.className = "nwcompat-achievement-icon";
+    elIcon.style.backgroundImage = `url(${icon})`;
+    elRoot.appendChild(elIcon);
+
+    const elText = document.createElement("div");
+    elText.className = "nwcompat-achievement-text";
+    elRoot.appendChild(elText);
+
+    const elName = document.createElement("div");
+    elName.className = "nwcompat-achievement-name";
+    elName.textContent = name;
+    elText.appendChild(elName);
+
+    const elDesc = document.createElement("div");
+    elDesc.className = "nwcompat-achievement-desc";
+    elDesc.textContent = description;
+    elText.appendChild(elDesc);
+
+    return elRoot;
 };
 
 globalThis.require = (id) => {

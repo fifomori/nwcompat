@@ -35,7 +35,7 @@ module.exports = {
         successCallback(true);
 
         const el = nwcompat.createAchievementElement(info.name, info.description, info.img, id);
-        document.querySelector(".chromori_achievement_area").appendChild(el);
+        document.querySelector(".nwcompat-achievement-area").appendChild(el);
 
         setTimeout(() => {
             document.getElementById(id)?.remove();

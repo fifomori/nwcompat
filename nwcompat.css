@@ -1,4 +1,4 @@
-.chromori_achievement_area {
+.nwcompat-achievement-area {
     z-index: 9999;
     user-select: none;
     position: absolute;
@@ -7,30 +7,30 @@
     overflow-y: hidden;
 }
 
-.chromori_achievement {
+.nwcomapt-achievement {
     width: 283px;
     height: 70px;
     animation: 5s linear 0s 1 slideInFromBottom;
     background: linear-gradient(#23262e, #0e141b);
 }
 
-.chromori_achievement_text {
+.nwcompat-achievement-text {
     display: flex;
     height: 100%;
     flex-direction: column;
     justify-content: center;
 }
 
-.chromori_achievement_text > div {
+.nwcompat-achievement-text > div {
     font-size: 12px;
     font-family: Helvetica;
 }
 
-.chromori_achievement_name {
+.nwcompat-achievement-name {
     color: #ededee;
 }
 
-.chromori_achievement_desc {
+.nwcompat-achievement-desc {
     color: #646b72;
 }
 
@@ -52,7 +52,7 @@
     }
 }
 
-.chromori_achievement_icon {
+.nwcompat-achievement-icon {
     width: 44px;
     height: 44px;
     float: left;
