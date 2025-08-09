@@ -1,3 +1,4 @@
+require("./common/gamepad");
 require("./common/loader");
 require("./common/misc");
 require("./common/pixi");

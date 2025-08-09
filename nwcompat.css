@@ -59,3 +59,83 @@
     margin: 13px 16px 13px 10px;
     background-size: cover;
 }
+
+.nwcompat-gamepad {
+    --nwcompat-gamepad-button-size: 56px;
+
+    position: absolute;
+    pointer-events: none;
+    z-index: 100000;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.nwcompat-gamepad.edit {
+    background-color: rgb(200, 163, 255, 0.5);
+}
+
+.nwcompat-gamepad .editor {
+    visibility: collapse;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    height: 100%;
+}
+
+.nwcompat-gamepad.edit .editor,
+.nwcompat-gamepad.edit .editor * {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.nwcompat-gamepad .pad-wrap {
+    position: absolute;
+    pointer-events: auto;
+}
+
+.nwcompat-gamepad .pad {
+    touch-action: none;
+    display: inline-grid;
+    width: max-content;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(3, auto);
+}
+
+.nwcompat-gamepad .button {
+    user-select: none;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    outline: solid white 4px;
+    outline-offset: -4px;
+
+    width: var(--nwcompat-gamepad-button-size);
+    height: var(--nwcompat-gamepad-button-size);
+
+    font-size: 150%;
+}
+
+.nwcompat-gamepad .button.round {
+    border-radius: 50%;
+}
+
+.nwcompat-gamepad .button.square {
+    border-radius: 25%;
+}
+
+.nwcompat-gamepad .button.active {
+    color: black;
+    background-color: white;
+}

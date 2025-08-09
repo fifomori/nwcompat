@@ -29,8 +29,19 @@ interface NativeInfo {
     hostVersion: string;
 }
 
+interface ButtonSavedData {
+    inset: {
+        x: number;
+        y: number;
+    };
+}
+
 interface SavedData {
     achievements: Record<string, boolean>;
+    gamepad: {
+        buttonSize: number;
+        buttons: Record<string, ButtonSavedData>;
+    };
 }
 
 interface NWCompat {
