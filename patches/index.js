@@ -4,7 +4,6 @@ require("./common/pixi");
 require("./common/performance");
 
 require("./instarsandtime/loader");
-require("./instarsandtime/performance");
 
 require("./omori/loader");
 require("./omori/pixi");
