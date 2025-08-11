@@ -42,6 +42,18 @@ nwcompat.patches.push({
 });
 
 nwcompat.patches.push({
+    stage: "scriptload",
+    target: "common",
+    name: "performance",
+    scripts: ["Archeia_CoreChanges"],
+    patch: (script) => {
+        script.source = script.source
+            .replace("Window.prototype._refreshFrame", "/* Window.prototype._refreshFrame")
+            .replace("\t};", "\t}; */");
+    },
+});
+
+nwcompat.patches.push({
     stage: "onload",
     target: "common",
     name: "performance",
