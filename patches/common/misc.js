@@ -7,10 +7,24 @@ nwcompat.patches.push({
             return false;
         };
 
-        const oTouchInput = { _onTouchStart: TouchInput._onTouchStart };
-        TouchInput._onTouchStart = function () {
-            if (this._touchInputEnabled) oTouchInput._onTouchStart.call(this, ...arguments);
+        const hookTouchInput = (functionName) => {
+            const oFunction = TouchInput[functionName];
+            TouchInput[functionName] = function () {
+                if (this._touchInputEnabled) oFunction.call(this, ...arguments);
+            };
         };
+
+        [
+            "_onMouseDown",
+            "_onMouseMove",
+            "_onMouseUp",
+            "_onWheel",
+            "_onTouchStart",
+            "_onTouchMove",
+            "_onTouchEnd",
+            "_onTouchCancel",
+            "_onPointerDown",
+        ].forEach(hookTouchInput);
 
         TouchInput._toggleTouchInput = function () {
             this._touchInputEnabled = !this._touchInputEnabled;
