@@ -88,18 +88,10 @@ class Draggable {
         this.el.style[this.options.anchor.x] = this.options.inset.x + "px";
         this.el.style[this.options.anchor.y] = this.options.inset.y + "px";
 
-        this.el.addEventListener("pointerdown", this._onPointerDown, {
-            passive: true,
-        });
-        this.el.addEventListener("pointermove", this._onPointerMove, {
-            passive: true,
-        });
-        this.el.addEventListener("pointerup", this._onPointerEnd, {
-            passive: true,
-        });
-        this.el.addEventListener("pointercancel", this._onPointerEnd, {
-            passive: true,
-        });
+        this.el.addEventListener("pointerdown", this._onPointerDown);
+        this.el.addEventListener("pointermove", this._onPointerMove);
+        this.el.addEventListener("pointerup", this._onPointerEnd);
+        this.el.addEventListener("pointercancel", this._onPointerEnd);
 
         this._prevClientX = null;
         this._prevClientY = null;
@@ -166,18 +158,10 @@ class Pad {
 
         [this.root, this.buttons] = this.#createDOM();
 
-        this.root.addEventListener("pointerdown", this._onPointerDown, {
-            passive: true,
-        });
-        this.root.addEventListener("pointermove", this._onPointerMove, {
-            passive: true,
-        });
-        this.root.addEventListener("pointerup", this._onPointerEnd, {
-            passive: true,
-        });
-        this.root.addEventListener("pointercancel", this._onPointerEnd, {
-            passive: true,
-        });
+        this.root.addEventListener("pointerdown", this._onPointerDown);
+        this.root.addEventListener("pointermove", this._onPointerMove);
+        this.root.addEventListener("pointerup", this._onPointerEnd);
+        this.root.addEventListener("pointercancel", this._onPointerEnd);
 
         parent.appendChild(this.root);
     }
@@ -289,18 +273,10 @@ class Button {
 
         this.el = this.#createDOM();
 
-        this.el.addEventListener("pointerdown", this._onPointerDown, {
-            passive: true,
-        });
-        this.el.addEventListener("pointermove", this._onPointerMove, {
-            passive: true,
-        });
-        this.el.addEventListener("pointerup", this._onPointerEnd, {
-            passive: true,
-        });
-        this.el.addEventListener("pointercancel", this._onPointerEnd, {
-            passive: true,
-        });
+        this.el.addEventListener("pointerdown", this._onPointerDown);
+        this.el.addEventListener("pointermove", this._onPointerMove);
+        this.el.addEventListener("pointerup", this._onPointerEnd);
+        this.el.addEventListener("pointercancel", this._onPointerEnd);
 
         parent.appendChild(this.el);
     }
