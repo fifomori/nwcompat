@@ -9,11 +9,34 @@ nwcompat.patches.push({
         const oSceneManager = { initGraphics: SceneManager.initGraphics };
         SceneManager.initGraphics = function () {
             oSceneManager.initGraphics.call(this, ...arguments);
+
             this._renderTexture = PIXI.RenderTexture.create({
                 width: Graphics.width,
                 height: Graphics.height,
             });
             this._backgroundSprite = new PIXI.Sprite(this._renderTexture);
+
+            // GTP_OmoriFixes
+            // create a ticker without maxFPS
+            this.ticker = new PIXI.Ticker();
+            this.ticker.add(this.update, this);
+            this.ticker.start();
+
+            const win = window.nw.Window.get();
+
+            win.on("minimize", () => {
+                this._minimizeHandler = setInterval(() => {
+                    if (WebAudio._masterVolume <= 0) {
+                        clearInterval(this._minimizeHandler);
+                    }
+                    this.updateWebAudio();
+                    this.updateVideos();
+                }, 25);
+            });
+
+            win.on("restore", () => {
+                this._clearMinimizeHandler();
+            });
         };
 
         SceneManager.snapForBackground = function () {
