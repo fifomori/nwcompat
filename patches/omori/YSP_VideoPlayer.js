@@ -38,6 +38,43 @@ nwcompat.patches.push({
              * @type {import('pixi.js').Texture<import('pixi.js').VideoResource>}
              */
             let texture = PIXI.Texture.from(`movies/${videoName}`, { resourceOptions: { autoPlay: false } });
+
+            // debug
+            [
+                "abort",
+                "canplay",
+                "canplaythrough",
+                "durationchange",
+                "emptied",
+                "encrypted",
+                "ended",
+                "error",
+                "loadeddata",
+                "loadedmetadata",
+                "loadstart",
+                "pause",
+                "play",
+                "playing",
+                "progress",
+                "ratechange",
+                "seeked",
+                "seeking",
+                "stalled",
+                "suspend",
+                "timeupdate",
+                "volumechange",
+                "waiting",
+                "waitingforkey",
+            ].forEach((name) => {
+                texture.baseTexture.resource.source.addEventListener(name, (e) => {
+                    console.log(
+                        `${e.type}: ${e.target.currentTime}/${e.target.duration}, net: ${e.target.networkState}, ready: ${e.target.readyState}`,
+                        e,
+                        e.target.error
+                    );
+                });
+            });
+
             videoCache[videoName] = texture;
             return texture;
         };
@@ -62,12 +99,6 @@ nwcompat.patches.push({
             video.texture.baseTexture.resource.source.volume *= ConfigManager.bgmVolume / 100;
             video.texture.baseTexture.resource.source.loop = false; // Being sure that the video does not loop
 
-            // debug
-            video.texture.baseTexture.resource.source.onerror = () => {
-                console.error(
-                    `Error ${video.texture.baseTexture.resource.source.error.code}; details: ${video.texture.baseTexture.resource.source.error.message}`
-                );
-            };
             return video;
         };
 
