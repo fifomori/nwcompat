@@ -54,6 +54,27 @@ nwcompat.patches.push({
             gamepadRoot.classList.add("edit");
         };
 
+        [
+            "_onMouseDown",
+            "_onMouseMove",
+            "_onMouseUp",
+            "_onWheel",
+            "_onTouchStart",
+            "_onTouchMove",
+            "_onTouchEnd",
+            "_onTouchCancel",
+            "_onPointerDown",
+        ].forEach((functionName) => {
+            const oFunction = TouchInput[functionName];
+            TouchInput[functionName] = function () {
+                if (this._touchInputEnabled && !Draggable.inEditMode) oFunction.call(this, ...arguments);
+            };
+        });
+
+        TouchInput._toggleTouchInput = function () {
+            this._touchInputEnabled = !this._touchInputEnabled;
+        };
+
         const makeWrapper = (id) => {
             const wrapper = document.createElement("div");
             wrapper.id = id;
