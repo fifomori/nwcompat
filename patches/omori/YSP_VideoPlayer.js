@@ -60,7 +60,6 @@ nwcompat.patches.push({
 
             // Making video responsive to BGM audio;
             video.texture.baseTexture.resource.source.volume *= ConfigManager.bgmVolume / 100;
-            video.texture.baseTexture.loop = false;
             video.texture.baseTexture.resource.source.loop = false; // Being sure that the video does not loop
 
             // debug
@@ -74,7 +73,14 @@ nwcompat.patches.push({
 
         const playVideo = (video) => {
             SceneManager._scene._spriteset.addVideo(video);
-            video.texture.baseTexture.resource.source.play();
+
+            const source = video.texture.baseTexture.resource.source;
+            if (source.currentTime >= source.duration) {
+                // chrome issue
+                source.currentTime = 0;
+            }
+
+            source.play();
         };
 
         const playVideoById = (id) => {
