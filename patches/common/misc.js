@@ -7,13 +7,6 @@ nwcompat.patches.push({
             return false;
         };
 
-        const hookTouchInput = (functionName) => {
-            const oFunction = TouchInput[functionName];
-            TouchInput[functionName] = function () {
-                if (this._touchInputEnabled) oFunction.call(this, ...arguments);
-            };
-        };
-
         [
             "_onMouseDown",
             "_onMouseMove",
@@ -24,7 +17,12 @@ nwcompat.patches.push({
             "_onTouchEnd",
             "_onTouchCancel",
             "_onPointerDown",
-        ].forEach(hookTouchInput);
+        ].forEach((functionName) => {
+            const oFunction = TouchInput[functionName];
+            TouchInput[functionName] = function () {
+                if (this._touchInputEnabled) oFunction.call(this, ...arguments);
+            };
+        });
 
         TouchInput._toggleTouchInput = function () {
             this._touchInputEnabled = !this._touchInputEnabled;

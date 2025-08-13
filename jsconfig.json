@@ -1,5 +1,10 @@
 {
     "compilerOptions": {
-        "typeRoots": ["intellisense.d.ts"]
+        "baseUrl": ".",
+        "paths": {
+            "@nwcompat": ["intellisense.d.ts"]
+        },
+        "typeRoots": ["intellisense.d.ts"],
+        "skipLibCheck": false
     }
 }

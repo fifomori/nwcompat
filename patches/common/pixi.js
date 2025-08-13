@@ -128,7 +128,7 @@ nwcompat.patches.push({
 
         // WindowLayer backported from MZ
         /**
-         * @param {PixiJS.Graphics} graphics
+         * @param {import('pixi.js').Graphics} graphics
          */
         Window.prototype.drawShape = function (graphics) {
             if (graphics) {
@@ -161,7 +161,7 @@ nwcompat.patches.push({
         };
 
         /**
-         * @param {PixiJS.Renderer} renderer
+         * @param {import('pixi.js').Renderer} renderer
          */
         WindowLayer.prototype.render = function (renderer) {
             if (!this.visible || !this.renderable) {

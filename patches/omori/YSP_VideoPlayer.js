@@ -34,12 +34,18 @@ nwcompat.patches.push({
             if (videoCache[videoName]) {
                 return videoCache[videoName];
             }
+            /**
+             * @type {import('pixi.js').Texture<import('pixi.js').VideoResource>}
+             */
             let texture = PIXI.Texture.from(`movies/${videoName}`, { resourceOptions: { autoPlay: false } });
             videoCache[videoName] = texture;
             return texture;
         };
 
         const newVideo = (videoName, id = "video") => {
+            /**
+             * @type {import('@nwcompat').ResourceSprite<import('pixi.js').VideoResource>}
+             */
             let video = new PIXI.Sprite(loadVideo(videoName));
             video.update = () => {
                 video.texture.update();

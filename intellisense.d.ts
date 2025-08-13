@@ -71,16 +71,25 @@ interface NWCompat {
     createAchievementElement: (name: string, description: string, icon: string, id: string) => HTMLDivElement;
 }
 
-type PixiJS = typeof import("pixi.js") & {
+import pixi from "pixi.js";
+
+type PixiJS = typeof pixi & {
     tilemap: typeof import("@pixi/tilemap");
     filters: typeof import("pixi-filters");
 };
 
-interface Window {
-    PIXI: PixiJS;
-    nwcompat: NWCompat;
-    document: Document;
+interface ResourceSprite<R extends pixi.Resource> extends pixi.Sprite {
+    texture: pixi.Texture<R>;
 }
 
-declare const PIXI: PixiJS;
-declare const nwcompat: NWCompat;
+interface NWWindow extends Window {
+    PIXI: PixiJS;
+    nwcompat: NWCompat;
+}
+
+declare var window: NWWindow & typeof globalThis;
+
+declare global {
+    const PIXI: PixiJS;
+    const nwcompat: NWCompat;
+}
