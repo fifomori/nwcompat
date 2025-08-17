@@ -78,11 +78,13 @@ nwcompat.patches.push({
         };
 
         DataManager._cacheMap = Yanfly.PreloadedMaps;
+        DataManager._cacheData = {};
         DataManager._cacheTiledMap = [];
         DataManager._cacheTileset = [];
 
         const oDataManager = {
             loadMapData: DataManager.loadMapData,
+            loadDataFile: DataManager.loadDataFile,
             loadTiledMapData: DataManager.loadTiledMapData,
             loadTilesetData: DataManager.loadTilesetData,
         };
@@ -94,31 +96,33 @@ nwcompat.patches.push({
             }
 
             if (mapId > 0) {
+                this._mapLoader = false;
+                window["$dataMap"] = null;
+                Graphics.startLoading();
+
                 if (this._cacheMap[mapId]) {
-                    $dataMap = this._cacheMap[mapId];
+                    new Promise((resolve) => resolve()).then(() => {
+                        window["$dataMap"] = this._cacheMap[mapId];
 
-                    DataManager.onLoad($dataMap);
-                    Graphics.endLoading();
-                    this._mapLoader = true;
-                } else {
-                    this._mapLoader = false;
-                    $dataMap = null;
-                    Graphics.startLoading();
-
-                    const base = pp.dirname(process.mainModule.filename);
-                    const filename = `${base}/data/Map${mapId.padZero(3)}.KEL`;
-                    try {
-                        const buffer = fs.readFileSync(filename);
-                        const data = Encryption.decrypt(buffer).toString();
-                        $dataMap = this._cacheMap[mapId] = JSON.parse(data);
-
-                        DataManager.onLoad($dataMap);
+                        DataManager.onLoad(window["$dataMap"]);
                         Graphics.endLoading();
                         this._mapLoader = true;
-                    } catch (e) {
-                        Graphics.printLoadingError(filename);
-                        SceneManager.stop();
-                    }
+                    });
+                } else {
+                    const base = pp.dirname(process.mainModule.filename);
+                    const filename = `${base}/data/Map${mapId.padZero(3)}.KEL`;
+                    fs.readFile(filename, (err, buffer) => {
+                        if (!!err) {
+                            Graphics.printLoadingError(filename);
+                            SceneManager.stop();
+                        }
+                        const data = Encryption.decrypt(buffer).toString();
+                        window["$dataMap"] = this._cacheMap[mapId] = JSON.parse(data);
+
+                        DataManager.onLoad(window["$dataMap"]);
+                        Graphics.endLoading();
+                        this._mapLoader = true;
+                    });
                 }
 
                 this.loadTiledMapData(mapId);
@@ -128,31 +132,57 @@ nwcompat.patches.push({
             }
         };
 
+        // GTP_OmoriFixes
+        DataManager.loadDataFile = function (name, src) {
+            if (!!Utils.isOptionValid("test")) {
+                return oDataManager.loadMapData.call(this, ...arguments);
+            }
+
+            if (this._cacheData[name]) {
+                new Promise((resolve) => resolve()).then(() => {
+                    window[name] = this._cacheData[name];
+                    DataManager.onLoad(window[name]);
+                });
+            } else {
+                const base = pp.dirname(process.mainModule.filename);
+                const filename = `${base}/data/${src}`;
+                fs.readFile(filename, (err, buffer) => {
+                    if (!!err) throw new Error(err);
+                    const data = Encryption.decrypt(buffer).toString();
+                    window[name] = this._cacheData[name] = JSON.parse(data);
+                    DataManager.onLoad(window[name]);
+                });
+            }
+        };
+
         // YED_Tiled
         DataManager.loadTiledMapData = function (mapId) {
             if (!!Utils.isOptionValid("test")) {
                 return oDataManager.loadTiledMapData.call(this, ...arguments);
             }
 
+            this.unloadTiledMapData();
+
             if (this._cacheTiledMap[mapId]) {
-                DataManager._tempTiledData = this._cacheTiledMap[mapId];
-                DataManager.loadTilesetData();
-                DataManager._tiledLoaded = true;
+                new Promise((resolve) => resolve()).then(() => {
+                    DataManager._tempTiledData = this._cacheTiledMap[mapId];
+                    DataManager.loadTilesetData();
+                    DataManager._tiledLoaded = true;
+                });
             } else {
                 const base = pp.dirname(process.mainModule.filename);
                 const filename = `${base}/maps/map${mapId}.AUBREY`;
-                this.unloadTiledMapData();
-                try {
-                    const buffer = fs.readFileSync(filename);
+                fs.readFile(filename, (err, buffer) => {
+                    if (!!err) {
+                        console.error(err);
+                        Graphics.printLoadingError(filename);
+                        SceneManager.stop();
+                    }
                     const decrypt = Encryption.decrypt(buffer);
                     DataManager._tempTiledData = this._cacheTiledMap[mapId] = JSON.parse(decrypt.toString());
                     DataManager.loadTilesetData();
                     DataManager._tiledLoaded = true;
-                } catch (e) {
-                    console.error(e);
-                    Graphics.printLoadingError(filename);
-                    SceneManager.stop();
-                }
+                });
             }
         };
 
@@ -187,15 +217,16 @@ nwcompat.patches.push({
                         xhr.send();
                     } else {
                         var base = pp.dirname(process.mainModule.filename);
-                        try {
-                            const buffer = fs.readFileSync(base + "/maps/" + filename.replace(".json", ".AUBREY"));
+                        fs.readFile(base + "/maps/" + filename.replace(".json", ".AUBREY"), (err, buffer) => {
+                            if (!!err) {
+                                throw new Error(err);
+                            }
+
                             const data = JSON.parse(Encryption.decrypt(buffer).toString());
                             this._cacheTileset[filename] = data;
                             Object.assign(tileset, data);
                             DataManager._tilesetToLoad--;
-                        } catch (e) {
-                            throw e;
-                        }
+                        });
                     }
                 }
             }
