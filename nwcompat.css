@@ -1,5 +1,5 @@
 .nwcompat-achievement-area {
-    z-index: 9999;
+    z-index: 1000;
     user-select: none;
     position: absolute;
     bottom: 0;
@@ -140,4 +140,9 @@
 .nwcompat-gamepad .button.active {
     color: black;
     background-color: white;
+}
+
+/* https://github.com/bfanger/pixi-inspector */
+div[data-pixi-devtools="clip"] {
+    z-index: 10000;
 }
