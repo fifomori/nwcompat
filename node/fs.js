@@ -21,11 +21,6 @@ const fs = {
     },
 
     readFileSync(path, options = "ascii") {
-        // redirect to /data/user/0/com.cafeed28.omori/files/
-        if (path.startsWith(nwcompat.nativeInfo.dataDirectory)) {
-            path = path.replace("/OMORI", "");
-        }
-
         const data = nwcompat.fsReadFile(path);
 
         if (data == null) {
@@ -86,21 +81,35 @@ const fs = {
         if (!callback) return;
 
         new Promise((resolve, reject) => {
-            resolve(fs.statSync(path));
-        }).then((data) => callback(null, data));
+            try {
+                resolve(fs.statSync(path));
+            } catch (e) {
+                reject(e);
+            }
+        })
+            .then((data) => callback(null, data))
+            .catch((e) => callback(e));
     },
 
     statSync(path) {
         const stat = nwcompat.fsStat(path);
-        return {
-            isFile: () => stat == 1,
-            isDirectory: () => stat == 2,
-            isExists: () => stat != -1,
-        };
+        if (stat == -1) {
+            throw `ENOENT: no such file or directory, stat '${path}'`;
+        } else {
+            return {
+                isFile: () => stat == 1,
+                isDirectory: () => stat == 2,
+            };
+        }
     },
 
     existsSync(path) {
-        return fs.statSync(path).isExists();
+        try {
+            fs.statSync(path);
+            return true;
+        } catch (e) {
+            return false;
+        }
     },
 
     rename(oldPath, newPath, callback) {
