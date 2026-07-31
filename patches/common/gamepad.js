@@ -10,6 +10,10 @@ nwcompat.patches.push({
 
         const oNavigator = { getGamepads: navigator.getGamepads };
         navigator.getGamepads = function () {
+            // in stars and time does some stupid shit with scene in Input._updateGamepadState hook (master2015hp_InStarTimeSnippet)
+            // for some reason in nwjs gamepads are not present for some time after start, so it is not a problem there
+            // maybe https://github.com/w3c/gamepad/issues/149 is related
+            if (!SceneManager || !SceneManager._scene) return [];
             // VirtualGamepad is first to allow physical gamepads to override the input (see Input._pollGamepads)
             return [VirtualGamepad.instance, ...oNavigator.getGamepads.call(navigator)];
         };
