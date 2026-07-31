@@ -8,8 +8,10 @@ nwcompat.patches.push({
 
         new VirtualGamepad(0, targetLayout.id);
 
+        const oNavigator = { getGamepads: navigator.getGamepads };
         navigator.getGamepads = function () {
-            return [VirtualGamepad.instance];
+            // VirtualGamepad is first to allow physical gamepads to override the input (see Input._pollGamepads)
+            return [VirtualGamepad.instance, ...oNavigator.getGamepads.call(navigator)];
         };
 
         const gamepadRoot = document.querySelector(".nwcompat-gamepad");
